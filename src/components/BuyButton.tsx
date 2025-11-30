@@ -14,8 +14,8 @@ import { Button, ButtonText } from "./ui/button";
 import { Spinner } from "./ui/Spinner";
 
 const sku = Platform.select({
-  ios: "gin_premium_ios", // product id
-  android: "gin_premium_android",
+  ios: "hearts_premium_ios", // product id
+  android: "hearts_premium_android",
 });
 
 export default function BuyButton({ onSuccess }: { onSuccess?: () => void }) {

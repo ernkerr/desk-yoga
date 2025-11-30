@@ -3,7 +3,7 @@
     "name": "Hearts Score Tracker",
     "slug": "hearts-score-tracker",
     "scheme": "hearts-score-tracker",
-    "version": "1.0.3",
+    "version": "1.0.0",
     "splash": {
       "backgroundColor": "#000000",
       "resizeMode": "contain"
@@ -12,7 +12,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "org.cybergoose.heartsscoretracker",
-      "buildNumber": "4",
+      "buildNumber": "1",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       },

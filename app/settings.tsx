@@ -28,7 +28,7 @@ import { Box } from "@/src/components/ui/box";
 import * as RNIap from "react-native-iap";
 import RestoreButton from "@/src/components/RestoreButton";
 
-const validProductId = "gin_premium_ios";
+const validProductId = "hearts_premium_ios";
 
 // This screen lets the user view and change their name
 export default function SettingsScreen() {

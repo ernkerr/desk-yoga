@@ -12,8 +12,8 @@ import { Spinner } from "./ui/Spinner";
 // Define the product ID based on platform
 // This matches the product ID configured in App Store Connect
 const sku = Platform.select({
-  ios: "gin_premium_ios",
-  android: "gin_premium_android",
+  ios: "hearts_premium_ios",
+  android: "hearts_premium_android",
 });
 
 export default function RestoreButton() {
