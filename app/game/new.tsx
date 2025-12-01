@@ -116,7 +116,7 @@ export default function NewGameScreen() {
       <Stack.Screen
         options={{
           title: "New Game",
-          headerTitleStyle: { fontFamily: "SpaceMono" },
+          headerTitleStyle: { fontFamily: "Card" },
         }}
       />
 
@@ -131,6 +131,7 @@ export default function NewGameScreen() {
               <Box className="flex-row items-center mb-4 gap-2">
                 <Box className="flex-1">
                   <Input
+                    size="lg"
                     className="border-2 border-black rounded-xl"
                     style={{ boxShadow: "2px 2px 0px #000" }}
                   >
@@ -147,11 +148,11 @@ export default function NewGameScreen() {
                 {index > 0 && (
                   <Button
                     onPress={() => handleRemovePlayer(index)}
-                    className="bg-red-500 border-2 border-black rounded-lg p-2"
-                    size="sm"
+                    className="bg-red-500 border-2 border-black rounded-xl p-2"
+                    size="lg"
                     style={{ boxShadow: "2px 2px 0px #000" }}
                   >
-                    <X size={16} color="#fff" />
+                    <X size={20} color="#fff" />
                   </Button>
                 )}
               </Box>
@@ -165,6 +166,7 @@ export default function NewGameScreen() {
 
           {players.length < 5 && (
             <Button
+              size="xl"
               onPress={handleAddPlayer}
               className=" border-2 border-black rounded-xl mb-6"
               style={{ boxShadow: "4px 4px 0px #000" }}
@@ -186,6 +188,7 @@ export default function NewGameScreen() {
               Target Score
             </Text>
             <Input
+              size="lg"
               className="border-2 border-black rounded-xl"
               style={{ boxShadow: "2px 2px 0px #000" }}
             >
@@ -206,8 +209,9 @@ export default function NewGameScreen() {
             </Text>
           </Box>
 
-          <Box className="flex-row gap-4">
+          <Box className="flex-row gap-4 mb-4">
             <Button
+              size="xl"
               onPress={() => router.back()}
               className="flex-1 bg-white border-2 border-black rounded-xl"
               style={{ boxShadow: "4px 4px 0px #000" }}
@@ -219,6 +223,7 @@ export default function NewGameScreen() {
               </ButtonText>
             </Button>
             <Button
+              size="xl"
               onPress={handleCreateGame}
               className="flex-1  border-2 border-black rounded-xl"
               style={{ boxShadow: "4px 4px 0px #000" }}

@@ -44,11 +44,13 @@ export function MultiPlayerScoreModal({
   const [shootMoonPlayerId, setShootMoonPlayerId] = useState<string | null>(
     null
   );
-  const [queenOfSpadesPlayerId, setQueenOfSpadesPlayerId] = useState<string | null>(
-    null
-  );
+  const [queenOfSpadesPlayerId, setQueenOfSpadesPlayerId] = useState<
+    string | null
+  >(null);
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
-  const [originalScores, setOriginalScores] = useState<{ [playerId: string]: string }>({});
+  const [originalScores, setOriginalScores] = useState<{
+    [playerId: string]: string;
+  }>({});
   const [queenOriginalScore, setQueenOriginalScore] = useState<string>("");
 
   // Initialize scores when modal opens
@@ -143,7 +145,7 @@ export function MultiPlayerScoreModal({
   return (
     <Modal isOpen={visible} onClose={onClose}>
       <ModalBackdrop className="bg-black/50" />
-      <ModalContent className="w-[90%] p-6">
+      <ModalContent className="w-[90%] p-6 ">
         {/* Header */}
         <ModalHeader className="pb-4">
           <Text
@@ -179,7 +181,9 @@ export function MultiPlayerScoreModal({
                   backgroundColor:
                     selectedPlayerId === player.id ? "#dbeafe" : "#fff",
                   boxShadow:
-                    selectedPlayerId === player.id ? "3px 3px 0px #000" : "none",
+                    selectedPlayerId === player.id
+                      ? "3px 3px 0px #000"
+                      : "none",
                 }}
               >
                 <Box
@@ -243,7 +247,9 @@ export function MultiPlayerScoreModal({
                       className="w-10 h-10 rounded-lg border-2 border-black justify-center items-center"
                       style={{
                         backgroundColor:
-                          queenOfSpadesPlayerId === player.id ? "#fee2e2" : "#fff",
+                          queenOfSpadesPlayerId === player.id
+                            ? "#fee2e2"
+                            : "#fff",
                         boxShadow: "2px 2px 0px #000",
                       }}
                     >
@@ -251,7 +257,9 @@ export function MultiPlayerScoreModal({
                         size={20}
                         color="#000"
                         fill={
-                          queenOfSpadesPlayerId === player.id ? "#dc2626" : "none"
+                          queenOfSpadesPlayerId === player.id
+                            ? "#dc2626"
+                            : "none"
                         }
                       />
                     </Pressable>
@@ -317,7 +325,7 @@ export function MultiPlayerScoreModal({
         {/* Footer */}
         <ModalFooter className="pt-4 gap-3">
           <Button
-            size="lg"
+            size="xl"
             variant="outline"
             onPress={onClose}
             className="flex-1"
@@ -328,7 +336,7 @@ export function MultiPlayerScoreModal({
             </ButtonText>
           </Button>
           <Button
-            size="lg"
+            size="xl"
             onPress={handleSave}
             className="flex-1"
             style={{ boxShadow: "4px 4px 0px #000" }}

@@ -71,7 +71,7 @@ export default function GamesScreen() {
 
     return (
       <Pressable
-        className="bg-white rounded-2xl border-2 border-black p-4 mb-8"
+        className="bg-white rounded-2xl border-2 border-black p-4 mb-8 mr-2"
         onPress={() => handleGamePress(item.id)}
         style={{
           boxShadow: "4px 4px 0px #000",
@@ -83,7 +83,7 @@ export default function GamesScreen() {
           {item.players.slice(0, 5).map((player, index) => (
             <Avatar
               key={player.id}
-              size="sm"
+              size="lg"
               className="border-2 border-black"
               style={{
                 backgroundColor: player.color || "#fff",
@@ -106,7 +106,7 @@ export default function GamesScreen() {
 
         {/* Player Names */}
         <Text
-          className="text-black text-base mb-1"
+          className="text-black  mb-1"
           style={{ fontFamily: "SpaceMonoRegular" }}
         >
           {item.players.map((p) => p.name).join(", ")}
@@ -176,6 +176,7 @@ export default function GamesScreen() {
 
         <Box className="absolute bottom-8 left-8 right-8">
           <Button
+            size="xl"
             onPress={handleStartNewGame}
             className="border-2 border-black rounded-xl"
             style={{ boxShadow: "4px 4px 0px #000" }}

@@ -143,8 +143,8 @@ export default function GameDetailScreen() {
         editRoundIndex={editRoundIndex}
       />
 
-      <Box className="flex-1 bg-gray-100">
-        {/* Confetti Animation */}
+      <>
+        {/* Confetti Animation - Outside main container for full screen coverage */}
         {showConfetti && game.status === "completed" && (
           <LottieView
             source={require("../../assets/animations/confetti.json")}
@@ -156,35 +156,45 @@ export default function GameDetailScreen() {
               left: 0,
               right: 0,
               bottom: 0,
-              zIndex: 1000,
+              zIndex: 9999,
               pointerEvents: "none",
             }}
           />
         )}
 
-        <ScrollView className="flex-1">
-          {/* Scoreboard Header */}
+        <Box className="flex-1 bg-gray-100">
+          <ScrollView className="flex-1">
+            {/* Scoreboard Header */}
 
-          {/* Winner Message */}
-          {game.status === "completed" && winnerPlayer && (
-            <Box
-              className="bg-green-200 border-2 border-black m-6 p-4 rounded-xl"
-              style={{ boxShadow: "4px 4px 0px #000" }}
-            >
-              <Text
-                className="text-center font-bold text-xl"
-                style={{ fontFamily: "Card" }}
+            {/* Winner Message */}
+            {game.status === "completed" && winnerPlayer && (
+              <Box
+                className="bg-yellow-300 border-4 border-black m-6 p-8"
+                style={{ boxShadow: "8px 8px 0px #000" }}
               >
-                🎉 {winnerPlayer.name} Wins! 🎉
-              </Text>
-              <Text
-                className="text-center text-gray-700 mt-1"
-                style={{ fontFamily: "SpaceMonoRegular" }}
-              >
-                Final Score: {playerTotals[winnerPlayer.id]}
-              </Text>
-            </Box>
-          )}
+                <Box
+                  className="bg-black border-4 border-black p-4 mb-4"
+                  style={{ boxShadow: "4px 4px 0px #fff" }}
+                >
+                  <Text
+                    className="text-center font-bold text-4xl"
+                    style={{ fontFamily: "Card", color: "#fef08a" }}
+                  >
+                    WINNER
+                  </Text>
+                </Box>
+                <Text
+                  className="text-center font-bold text-3xl"
+                  style={{
+                    fontFamily: "Card",
+                    color: "#000",
+                    textTransform: "uppercase"
+                  }}
+                >
+                  {winnerPlayer.name}
+                </Text>
+              </Box>
+            )}
 
           {/* Rounds List */}
           <Box className="p-6">
@@ -322,8 +332,9 @@ export default function GameDetailScreen() {
         {game.status === "in_progress" && (
           <Box className="p-6">
             <Button
+              size="xl"
               onPress={handleAddRound}
-              className="rounded-xl"
+              className="rounded-xl mb-4"
               style={{ boxShadow: "4px 4px 0px #000" }}
             >
               <ButtonText style={{ fontFamily: "Card", fontSize: 18 }}>
@@ -333,6 +344,7 @@ export default function GameDetailScreen() {
           </Box>
         )}
       </Box>
+      </>
     </>
   );
 }
