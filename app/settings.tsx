@@ -137,7 +137,7 @@ export default function SettingsScreen() {
             <RestoreButton />
 
             {/* Save */}
-            <View className="flex-row mt-2">
+            <View className="flex-row mt-2 mb-28">
               <Button
                 size="lg"
                 onPress={handleSave}
@@ -156,7 +156,7 @@ export default function SettingsScreen() {
               onPress={handleClearStorage}
               // TODO: Add disabled state when paywall is implemented
               // disabled={!hasPaid}
-              className="mt-[90%] mb-16 bg-white w-[50%] ml-[25%] "
+              className="mt-[95%] mb-16 bg-white w-[50%] ml-[25%] "
               style={{
                 boxShadow: "4px 4px 0px #000",
               }}
