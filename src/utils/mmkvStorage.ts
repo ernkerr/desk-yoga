@@ -10,53 +10,81 @@ export const POINTS_PER_HEART = 1;
 export const MAX_POINTS_PER_ROUND = 26; // 13 hearts + 13 for queen
 
 // --- Type Definitions ---
-// These types match the structure used in asyncStorage.ts for full compatibility
+export type Player = {
+  id: string;
+  name: string;
+  color: string; // hex string for avatar background
+  isUser: boolean; // true for the current user
+};
+
+export type Round = {
+  date: string;
+  scores: { [playerId: string]: number }; // Map player ID to their score for this round
+  bonusType?: "queenOfSpades" | "shootMoon" | null;
+  bonusPlayerId?: string; // For shootMoon - who shot the moon
+};
+
 export type Game = {
   id: string;
   date: string;
-  scoreHistory: Array<{
-    user: number; // user's score for a round
-    opponent: number; // opponent's score for a round
-    date: string; // date of the round
-    bonusType?: "queenOfSpades" | "shootMoon" | null;
-  }>;
-  winner: "user" | "opponent" | null; // who won the game
-  notes?: string;
-  targetScore?: number;
-  // knockValue?: number;
-  // ginBonus?: number;
-  // bigGinBonus?: number;
-  // undercutBonus?: number;
-};
-
-export type Opponent = {
-  id: string;
-  name: string;
-  games: Game[];
-  color: string; // hex string for avatar background
+  players: Player[]; // 3-5+ players
+  rounds: Round[]; // Each round contains scores for all players
+  winner: string | null; // player ID of winner
+  targetScore: number;
+  status: "in_progress" | "completed";
 };
 
 export type LocalData = {
-  opponents: Opponent[];
+  games: Game[];
   hasPaid: boolean;
   userName?: string;
 };
 
-// --- Opponents ---
+// --- Games ---
 /**
- * Retrieves the list of opponents from MMKV storage.
+ * Retrieves the list of games from MMKV storage.
  * Returns an empty array if not set.
  */
-export function getOpponents(): Opponent[] {
-  const data = storage.getString("opponents");
+export function getGames(): Game[] {
+  const data = storage.getString("games");
   return data ? JSON.parse(data) : [];
 }
 
 /**
- * Saves the list of opponents to MMKV storage.
+ * Saves the list of games to MMKV storage.
  */
-export function saveOpponents(opponents: Opponent[]) {
-  storage.set("opponents", JSON.stringify(opponents));
+export function saveGames(games: Game[]) {
+  storage.set("games", JSON.stringify(games));
+}
+
+/**
+ * Retrieves a specific game by ID from MMKV storage.
+ * Returns null if not found.
+ */
+export function getGameById(id: string): Game | null {
+  const games = getGames();
+  return games.find(game => game.id === id) || null;
+}
+
+/**
+ * Updates a specific game in MMKV storage.
+ */
+export function updateGame(id: string, updates: Partial<Game>): void {
+  const games = getGames();
+  const index = games.findIndex(game => game.id === id);
+  if (index !== -1) {
+    games[index] = { ...games[index], ...updates };
+    saveGames(games);
+  }
+}
+
+/**
+ * Deletes a specific game from MMKV storage.
+ */
+export function deleteGame(id: string): void {
+  const games = getGames();
+  const filtered = games.filter(game => game.id !== id);
+  saveGames(filtered);
 }
 
 // --- Payment ---

@@ -1,243 +1,261 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Alert } from "react-native";
-import { useRouter, useLocalSearchParams, Stack } from "expo-router";
+import { ScrollView, View } from "react-native";
+import { useRouter, Stack } from "expo-router";
 import { Button, ButtonText } from "../../src/components/ui/button";
 import { Input, InputField } from "../../src/components/ui/input";
+import { Box } from "../../src/components/ui/box";
+import { Text } from "../../src/components/ui/text";
 import {
-  getOpponents,
-  saveOpponents,
-  getHasPaid,
+  ColorPicker,
+  COLOR_PICKER_PALETTE,
+} from "../../src/components/ui/ColorPicker";
+import {
+  getGames,
+  saveGames,
+  getUserName,
   generateId,
-  Game,
   getTargetScore,
+  type Player,
+  type Game,
 } from "../../src/utils/mmkvStorage";
-import {
-  Modal,
-  ModalBackdrop,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  ModalCloseButton,
-} from "../../src/components/ui/modal";
-import BuyButton from "@/src/components/BuyButton";
-import PaywallModal from "../../src/components/PaywallModal";
+import { X } from "lucide-react-native";
 
-// This screen lets the user start a new game for an opponent
+// Screen for creating a new game with multiple players
 export default function NewGameScreen() {
   const router = useRouter();
-  const { opponentId } = useLocalSearchParams(); // Get opponent ID from route
-  // State for the target score input
+  const [players, setPlayers] = useState<Player[]>([]);
   const [targetScore, setTargetScore] = useState("");
-  // State for 'No Limit' toggle (paid users only)
-  const [noLimit, setNoLimit] = useState(false);
-  // State for paywall
-  const [hasPaid, setHasPaid] = useState(false);
-  const [showPaywallModal, setShowPaywallModal] = useState(false);
 
-  // State for loading
-  const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(true);
-
-  // Check if the user has paid and prefill values when the screen loads
+  // Initialize with user as first player
   useEffect(() => {
-    setHasPaid(getHasPaid());
+    const userName = getUserName();
     const defaultTarget = getTargetScore();
     setTargetScore(defaultTarget.toString());
+
+    const userPlayer: Player = {
+      id: generateId(),
+      name: userName,
+      color: COLOR_PICKER_PALETTE[0],
+      isUser: true,
+    };
+    setPlayers([userPlayer]);
   }, []);
 
-  // Handler for creating a new game
+  function handleUpdatePlayerName(index: number, name: string) {
+    const updated = [...players];
+    updated[index] = { ...updated[index], name };
+    setPlayers(updated);
+  }
+
+  function handleUpdatePlayerColor(index: number, color: string) {
+    const updated = [...players];
+    updated[index] = { ...updated[index], color };
+    setPlayers(updated);
+  }
+
+  function handleAddPlayer() {
+    if (players.length >= 5) return; // Max 5 players for MVP
+
+    const newPlayer: Player = {
+      id: generateId(),
+      name: "",
+      color:
+        COLOR_PICKER_PALETTE[players.length % COLOR_PICKER_PALETTE.length],
+      isUser: false,
+    };
+    setPlayers([...players, newPlayer]);
+  }
+
+  function handleRemovePlayer(index: number) {
+    // Can't remove user (first player)
+    if (index === 0) return;
+    const updated = players.filter((_, i) => i !== index);
+    setPlayers(updated);
+  }
+
   function handleCreateGame() {
-    if (!opponentId) return;
-    const opponents = getOpponents();
-    const opponentIndex = opponents.findIndex((o) => o.id === opponentId);
-    if (opponentIndex === -1) {
-      Alert.alert("Error", "Opponent not found.");
-      return;
-    }
-    if (!hasPaid && opponents[opponentIndex].games.length >= 1) {
-      setShowPaywallModal(true);
+    // Validation
+    if (players.length < 3) {
+      alert("You need at least 3 players to start a game");
       return;
     }
 
-    // Free users: target score is always 100
-    let score = 100;
-    if (hasPaid) {
-      if (noLimit) {
-        score = 0; // 0 means 'No Limit'
-      } else {
-        score = parseInt(targetScore) || 100;
-        if (score < 1) score = 1;
-      }
+    const allNamesValid = players.every((p) => p.name.trim().length > 0);
+    if (!allNamesValid) {
+      alert("All players must have names");
+      return;
     }
-    setLoading(true);
-    // Create the new game object
+
+    const target = parseInt(targetScore, 10);
+    if (isNaN(target) || target <= 0) {
+      alert("Please enter a valid target score");
+      return;
+    }
+
+    // Create new game
     const newGame: Game = {
       id: generateId(),
       date: new Date().toISOString(),
-      scoreHistory: [],
+      players: players.map((p) => ({ ...p, name: p.name.trim() })),
+      rounds: [],
       winner: null,
-      targetScore: score,
+      targetScore: target,
+      status: "in_progress",
     };
-    // Add the new game to the opponent
-    opponents[opponentIndex].games.push(newGame);
-    saveOpponents(opponents);
-    setLoading(false);
-    // Navigate to the new game detail screen
+
+    // Save to storage
+    const games = getGames();
+    games.push(newGame);
+    saveGames(games);
+
+    // Navigate to game detail
     router.replace(`/game/${newGame.id}`);
   }
 
   return (
     <>
-      <PaywallModal
-        isOpen={showPaywallModal}
-        onClose={() => setShowPaywallModal(false)}
-        message="You can only have one game for free. Pay to unlock unlimited games!"
-        onSuccess={async () => {
-          setHasPaid(true);
-          setShowPaywallModal(false);
-          await handleCreateGame();
-        }}
-      />
-      {/* Modal for default game rules */}
-      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-        <ModalBackdrop className="bg-black/50" />
-        <ModalContent className="bg-white  rounded-lg p-6">
-          <ModalHeader>
-            <Text
-              className="text-xl font-bold mb-2"
-              style={{ fontFamily: "SpaceMonoRegular" }}
-            >
-              Use default game rules?
-            </Text>
-          </ModalHeader>
-          <ModalBody className="p-2">
-            <Text
-              className="bg-yellow-300 text-black font-bold border-4 border-black rounded-lg px-4 py-2 mb-2 text-center shadow-[4px_4px_0px_#000]"
-              style={{ fontFamily: "SpaceMonoRegular" }}
-            >
-              Target Score: {targetScore}
-            </Text>
-          </ModalBody>
-          <ModalFooter className="flex-row  gap-4 mx-4">
-            <Button
-              action="secondary"
-              onPress={() => setShowModal(false)}
-              className="mr-2 flex-1"
-              style={{
-                boxShadow: "4px 4px 0px #000",
-              }}
-            >
-              <ButtonText className="text-black">No</ButtonText>
-            </Button>
-            <Button
-              action="primary"
-              onPress={async () => {
-                setShowModal(false);
-                await handleCreateGame();
-              }}
-              className=" flex-1"
-              style={{
-                boxShadow: "4px 4px 0px #000",
-              }}
-            >
-              <ButtonText className="text-white">Yes</ButtonText>
-            </Button>
-          </ModalFooter>
-          <ModalCloseButton onPress={() => setShowModal(false)} />
-        </ModalContent>
-      </Modal>
-      {/* End Modal */}
       <Stack.Screen
         options={{
-          title: "Set Game Rules",
-          headerTitleStyle: {
-            fontFamily: "SpaceMono",
-          },
+          title: "New Game",
+          headerTitleStyle: { fontFamily: "SpaceMono" },
         }}
       />
-      <View className="flex-1 p-4 bg-white ">
-        {/* <Text className="text-2xl font-bold mb-6">Start New Game</Text> */}
-        {/* Target score input (paid users can set, free users see 100) */}
-        {hasPaid ? (
-          <>
+
+      <ScrollView className="flex-1 bg-gray-100">
+        <Box className="p-8">
+          <Text
+            className="text-xl font-bold mb-4"
+            style={{ fontFamily: "Card", fontSize: 24 }}
+          >
+            Players ({players.length}/5)
+          </Text>
+          <Text
+            className="text-gray-600 mb-6"
+            style={{ fontFamily: "SpaceMonoRegular" }}
+          >
+            Add 3-5 players to start the game
+          </Text>
+
+          {players.map((player, index) => (
+            <Box
+              key={player.id}
+              className="bg-white rounded-2xl border-2 border-black p-4 mb-6"
+              style={{ boxShadow: "4px 4px 0px #000" }}
+            >
+              <Box className="flex-row justify-between items-center mb-2">
+                <Text
+                  className="font-bold text-lg"
+                  style={{ fontFamily: "Card" }}
+                >
+                  {index === 0 ? "You" : `Player ${index + 1}`}
+                </Text>
+                {index > 0 && (
+                  <Button
+                    onPress={() => handleRemovePlayer(index)}
+                    className="bg-red-500 border-2 border-black rounded-lg p-2"
+                    size="sm"
+                  >
+                    <X size={16} color="#fff" />
+                  </Button>
+                )}
+              </Box>
+
+              <Text
+                className="mb-2 font-medium"
+                style={{ fontFamily: "SpaceMonoRegular" }}
+              >
+                Name
+              </Text>
+              <Input
+                className="mb-4 border-2 border-black rounded-xl"
+                style={{ boxShadow: "2px 2px 0px #000" }}
+              >
+                <InputField
+                  value={player.name}
+                  onChangeText={(text) => handleUpdatePlayerName(index, text)}
+                  placeholder="Enter player name"
+                  style={{ fontFamily: "SpaceMonoRegular" }}
+                  editable={index === 0 ? false : true} // User name comes from settings
+                />
+              </Input>
+
+              <Text
+                className="mb-2 font-medium"
+                style={{ fontFamily: "SpaceMonoRegular" }}
+              >
+                Color
+              </Text>
+              <ColorPicker
+                selectedColor={player.color}
+                onSelect={(color) => handleUpdatePlayerColor(index, color)}
+              />
+            </Box>
+          ))}
+
+          {players.length < 5 && (
+            <Button
+              onPress={handleAddPlayer}
+              className="bg-blue-500 border-2 border-black rounded-xl mb-6"
+              style={{ boxShadow: "4px 4px 0px #000" }}
+            >
+              <ButtonText style={{ fontFamily: "Card", fontSize: 16 }}>
+                + Add Player
+              </ButtonText>
+            </Button>
+          )}
+
+          <Box className="bg-white rounded-2xl border-2 border-black p-4 mb-6" style={{ boxShadow: "4px 4px 0px #000" }}>
             <Text
-              className="text-lg font-semibold mb-2"
-              style={{ fontFamily: "SpaceMonoRegular" }}
+              className="mb-2 font-bold text-lg"
+              style={{ fontFamily: "Card" }}
             >
               Target Score
             </Text>
             <Input
-              variant="outline"
-              size="lg"
-              isDisabled={noLimit || loading}
-              isInvalid={false}
-              isReadOnly={false}
-              style={{
-                boxShadow: "4px 4px 0px #000",
-              }}
+              className="border-2 border-black rounded-xl"
+              style={{ boxShadow: "2px 2px 0px #000" }}
             >
               <InputField
-                placeholder="Target Score (e.g. 100, 150)"
                 value={targetScore}
                 onChangeText={setTargetScore}
+                placeholder="100"
                 keyboardType="numeric"
                 style={{ fontFamily: "SpaceMonoRegular" }}
               />
             </Input>
-            {/* No Limit toggle */}
-            <Button
-              size="sm"
-              // TODO: make this a toggle button
-              action={noLimit ? "primary" : "secondary"}
-              onPress={() => setNoLimit((v) => !v)}
-              className="mt-4 rounded-full w-[40%] self-center"
-              // style={{
-              //   boxShadow: "4px 4px 0px #000",
-              // }}
+            <Text
+              className="text-gray-600 mt-2 text-sm"
+              style={{ fontFamily: "SpaceMonoRegular" }}
             >
-              <ButtonText className="text-black">
-                {noLimit ? "No Limit Enabled" : "Enable No Limit"}
+              Game ends when any player reaches this score. Player with lowest
+              score wins!
+            </Text>
+          </Box>
+
+          <Box className="flex-row gap-4">
+            <Button
+              onPress={() => router.back()}
+              className="flex-1 bg-gray-300 border-2 border-black rounded-xl"
+              style={{ boxShadow: "4px 4px 0px #000" }}
+            >
+              <ButtonText
+                style={{ fontFamily: "Card", fontSize: 16, color: "#000" }}
+              >
+                Cancel
               </ButtonText>
             </Button>
-          </>
-        ) : (
-          <Text
-            className="mb-4 text-gray-500"
-            style={{ fontFamily: "SpaceMonoRegular" }}
-          >
-            Target Score: 100 (free version limit)
-          </Text>
-        )}
-
-        {/* Create game button */}
-        <View className="flex-row justify-center mt-6 gap-4">
-          {/* Cancel button */}
-          <Button
-            size="lg"
-            action="secondary"
-            onPress={() => router.back()}
-            className=""
-            disabled={loading}
-            style={{
-              boxShadow: "4px 4px 0px #000",
-            }}
-          >
-            <ButtonText className="text-black">Cancel</ButtonText>
-          </Button>
-          <Button
-            size="lg"
-            onPress={handleCreateGame}
-            disabled={loading}
-            className=""
-            style={{
-              boxShadow: "4px 4px 0px #000",
-            }}
-          >
-            <ButtonText className="text-white">Start Game</ButtonText>
-          </Button>
-        </View>
-      </View>
+            <Button
+              onPress={handleCreateGame}
+              className="flex-1 bg-black border-2 border-black rounded-xl"
+              style={{ boxShadow: "4px 4px 0px #000" }}
+            >
+              <ButtonText style={{ fontFamily: "Card", fontSize: 16 }}>
+                Start Game
+              </ButtonText>
+            </Button>
+          </Box>
+        </Box>
+      </ScrollView>
     </>
   );
 }

@@ -1,66 +1,129 @@
 // Centralized game logic utilities for Hearts Score Tracker
 // This file contains reusable functions for core game operations such as winner calculation, paywall enforcement, and score tallying.
 
-import type { Game } from "./mmkvStorage";
+import type { Player, Round } from "./mmkvStorage";
 
 /**
- * Calculates the winner of a game based on the score history and the target score.
+ * Calculates the winner of a Hearts game.
+ * Winner = player with LOWEST score when ANY player reaches targetScore
  *
- * @param scoreHistory - Array of round objects with user and opponent scores.
- * @param targetScore - The score required to win the game. If not set or <= 0, no winner is determined.
- * @returns 'user', 'opponent', or null if no winner yet.
+ * @param rounds - Array of round objects with scores for all players
+ * @param players - Array of players in the game
+ * @param targetScore - The score threshold that ends the game
+ * @returns playerId of winner, or null if no winner yet
  */
 export function calculateWinner(
-  scoreHistory: { user: number; opponent: number }[],
-  targetScore?: number
-): "user" | "opponent" | null {
+  rounds: Round[],
+  players: Player[],
+  targetScore: number
+): string | null {
   if (!targetScore || targetScore <= 0) return null;
-  const userTotal = scoreHistory.reduce((sum, r) => sum + (r.user || 0), 0);
-  const opponentTotal = scoreHistory.reduce(
-    (sum, r) => sum + (r.opponent || 0),
-    0
+
+  // Calculate totals for each player
+  const totals = getAllPlayerTotals(rounds, players);
+
+  // Check if any player reached target
+  const hasReachedTarget = Object.values(totals).some(
+    (score) => score >= targetScore
   );
-  if (userTotal >= targetScore) return "user";
-  if (opponentTotal >= targetScore) return "opponent";
-  return null;
+  if (!hasReachedTarget) return null;
+
+  // Find player with LOWEST score (Hearts rule)
+  let lowestScore = Infinity;
+  let winnerId: string | null = null;
+  Object.entries(totals).forEach(([playerId, score]) => {
+    if (score < lowestScore) {
+      lowestScore = score;
+      winnerId = playerId;
+    }
+  });
+
+  return winnerId;
 }
 
 /**
- * Checks if a new score can be added, enforcing the free version's score limit (paywall logic).
+ * Calculates total score for a specific player across all rounds.
  *
- * @param scoreHistory - Array of round objects with user and opponent scores.
- * @param user - The score to be added for the user.
- * @param opp - The score to be added for the opponent.
- * @param hasPaid - Whether the user has paid for the app (unlocks unlimited scoring).
- * @param maxFreeScore - The maximum total score allowed for free users (default: 100).
- * @returns true if the score can be added, false if it would exceed the free limit.
+ * @param rounds - Array of round objects
+ * @param playerId - ID of the player to calculate total for
+ * @returns Total score for the specified player
  */
-export function canAddScore(
-  scoreHistory: { user: number; opponent: number }[],
-  user: number,
-  opp: number,
+export function getTotalScore(rounds: Round[], playerId: string): number {
+  return rounds.reduce((sum, round) => {
+    return sum + (round.scores[playerId] || 0);
+  }, 0);
+}
+
+/**
+ * Gets all player totals as a map of playerId to total score.
+ *
+ * @param rounds - Array of round objects
+ * @param players - Array of players in the game
+ * @returns Object mapping playerId to total score
+ */
+export function getAllPlayerTotals(
+  rounds: Round[],
+  players: Player[]
+): { [playerId: string]: number } {
+  const totals: { [playerId: string]: number } = {};
+
+  // Initialize all players with 0
+  players.forEach((p) => (totals[p.id] = 0));
+
+  // Sum up scores from all rounds
+  rounds.forEach((round) => {
+    Object.entries(round.scores).forEach(([playerId, score]) => {
+      totals[playerId] = (totals[playerId] || 0) + score;
+    });
+  });
+
+  return totals;
+}
+
+/**
+ * Checks if a new round can be added, enforcing the free version's score limit (paywall logic).
+ *
+ * @param rounds - Array of round objects
+ * @param players - Array of players in the game
+ * @param hasPaid - Whether the user has paid for the app
+ * @param maxFreeScore - The maximum total score allowed for free users (default: 100)
+ * @returns true if the round can be added, false if any player would exceed the free limit
+ */
+export function canAddRound(
+  rounds: Round[],
+  players: Player[],
   hasPaid: boolean,
   maxFreeScore = 100
 ): boolean {
   if (hasPaid) return true;
-  // Calculate total user score by summing all previous rounds plus the new score, using 0 as fallback for undefined values
-  const userTotal =
-    scoreHistory.reduce((sum, r) => sum + (r.user || 0), 0) + (user || 0);
-  const opponentTotal =
-    scoreHistory.reduce((sum, r) => sum + (r.opponent || 0), 0) + (opp || 0);
-  return userTotal <= maxFreeScore && opponentTotal <= maxFreeScore;
+
+  const totals = getAllPlayerTotals(rounds, players);
+
+  // Check if any player has exceeded the free limit
+  return Object.values(totals).every((score) => score <= maxFreeScore);
 }
 
 /**
- * Computes the total score for a given player across all rounds.
+ * Apply "Shoot the Moon" bonus scoring.
+ * The shooter gets 0 points for the round, all other players get 26 points.
  *
- * @param scoreHistory - Array of round objects with user and opponent scores.
- * @param player - 'user' or 'opponent' to specify which player's total to compute.
- * @returns The total score for the specified player.
+ * @param baseScores - Base scores for all players (before bonus)
+ * @param shooterId - ID of the player who shot the moon
+ * @returns Updated scores with shoot the moon applied
  */
-export function getTotalScore(
-  scoreHistory: { user: number; opponent: number }[],
-  player: "user" | "opponent"
-): number {
-  return scoreHistory.reduce((sum, r) => sum + (r[player] || 0), 0);
+export function applyShootMoonBonus(
+  baseScores: { [playerId: string]: number },
+  shooterId: string
+): { [playerId: string]: number } {
+  const result: { [playerId: string]: number } = {};
+
+  Object.keys(baseScores).forEach((playerId) => {
+    if (playerId === shooterId) {
+      result[playerId] = 0;
+    } else {
+      result[playerId] = 26;
+    }
+  });
+
+  return result;
 }
