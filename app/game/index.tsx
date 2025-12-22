@@ -75,7 +75,7 @@ export default function GamesScreen() {
         onPress={() => handleGamePress(item.id)}
         style={{
           boxShadow: "4px 4px 0px #000",
-          backgroundColor: isInProgress ? "#d4edda" : "#fff",
+          // backgroundColor: isInProgress ? "#d4edda" : "#fff",
         }}
       >
         {/* Player Avatars Row */}

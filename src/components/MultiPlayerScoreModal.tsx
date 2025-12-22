@@ -121,14 +121,21 @@ export function MultiPlayerScoreModal({
       setQueenOfSpadesPlayerId(null);
       setScores({ ...scores, [playerId]: queenOriginalScore });
     } else {
+      // If there's already a player with the Queen of Spades, restore their score first
+      const updatedScores = { ...scores };
+      if (queenOfSpadesPlayerId) {
+        updatedScores[queenOfSpadesPlayerId] = queenOriginalScore;
+      }
+
       // Clicking - save current score and add 13
-      const currentScore = scores[playerId] || "0";
+      const currentScore = updatedScores[playerId] || "0";
       setQueenOriginalScore(currentScore);
       setQueenOfSpadesPlayerId(playerId);
 
       const currentValue = parseInt(currentScore, 10) || 0;
       const newScore = currentValue + 13;
-      setScores({ ...scores, [playerId]: newScore.toString() });
+      updatedScores[playerId] = newScore.toString();
+      setScores(updatedScores);
     }
   }
 
@@ -255,7 +262,7 @@ export function MultiPlayerScoreModal({
                       style={{
                         backgroundColor:
                           queenOfSpadesPlayerId === player.id
-                            ? "#fee2e2"
+                            ? "#e5e7eb"
                             : "#fff",
                         boxShadow: "2px 2px 0px #000",
                       }}
@@ -309,7 +316,7 @@ export function MultiPlayerScoreModal({
                     {queenOfSpadesPlayerId === player.id && (
                       <Box
                         className="w-6 h-6 rounded justify-center items-center"
-                        style={{ backgroundColor: "#fee2e2" }}
+                        style={{ backgroundColor: "#e5e7eb" }}
                       >
                         <Spade size={16} color="#000" fill="#484848" />
                       </Box>
