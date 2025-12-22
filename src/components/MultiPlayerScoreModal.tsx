@@ -30,6 +30,15 @@ interface MultiPlayerScoreModalProps {
   editRoundIndex?: number | null;
 }
 
+function getInitials(name: string): string {
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+}
+
 export function MultiPlayerScoreModal({
   visible,
   onClose,
@@ -201,20 +210,18 @@ export function MultiPlayerScoreModal({
                       color: "#000",
                     }}
                   >
-                    {player.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")
-                      .toUpperCase()
-                      .slice(0, 2)}
+                    {getInitials(player.name)}
                   </Text>
                 </Box>
 
                 <Text
                   className="flex-1"
                   style={{ fontFamily: "SpaceMonoRegular", fontSize: 16 }}
+                  numberOfLines={1}
                 >
-                  {player.name}
+                  {selectedPlayerId === player.id
+                    ? getInitials(player.name)
+                    : player.name}
                 </Text>
 
                 {selectedPlayerId === player.id ? (
@@ -258,7 +265,7 @@ export function MultiPlayerScoreModal({
                         color="#000"
                         fill={
                           queenOfSpadesPlayerId === player.id
-                            ? "#dc2626"
+                            ? "#484848"
                             : "none"
                         }
                       />
@@ -304,7 +311,7 @@ export function MultiPlayerScoreModal({
                         className="w-6 h-6 rounded justify-center items-center"
                         style={{ backgroundColor: "#fee2e2" }}
                       >
-                        <Spade size={16} color="#000" fill="#dc2626" />
+                        <Spade size={16} color="#000" fill="#484848" />
                       </Box>
                     )}
                     {shootMoonPlayerId === player.id && (
