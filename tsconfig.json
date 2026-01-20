@@ -10,8 +10,14 @@
     "noEmit": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
+      "@config/*": ["./src/config/*"],
+      "@core/*": ["./src/core/*"],
+      "@games/*": ["./src/games/*"],
+      "@components/*": ["./src/components/*"],
+      "@ui/*": ["./src/components/ui/*"],
       "tailwind.config": ["./tailwind.config.js"]
     }
   },
