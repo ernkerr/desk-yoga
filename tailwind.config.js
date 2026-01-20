@@ -188,9 +188,47 @@ module.exports = {
       fontWeight: {
         extrablack: "950",
       },
+      // Design tokens - spacing scale
+      spacing: {
+        "xs": "4px",
+        "sm": "8px",
+        "md": "16px",
+        "lg": "24px",
+        "xl": "32px",
+        "2xl": "48px",
+        "3xl": "64px",
+        "card-padding": "16px",
+        "section-gap": "24px",
+        "screen-padding": "20px",
+      },
+      // Design tokens - border radius
+      borderRadius: {
+        "card": "16px",
+        "button": "12px",
+        "input": "12px",
+        "avatar": "9999px",
+      },
+      // Design tokens - typography scale
       fontSize: {
         "2xs": "10px",
+        "xs": "12px",
+        "sm": "14px",
+        "base": "16px",
+        "lg": "18px",
+        "xl": "20px",
+        "2xl": "24px",
+        "3xl": "30px",
+        "4xl": "36px",
+        // Semantic typography with line heights
+        "heading-1": ["36px", { lineHeight: "1.2", fontWeight: "700" }],
+        "heading-2": ["30px", { lineHeight: "1.25", fontWeight: "700" }],
+        "heading-3": ["24px", { lineHeight: "1.3", fontWeight: "600" }],
+        "body-lg": ["18px", { lineHeight: "1.5" }],
+        "body": ["16px", { lineHeight: "1.5" }],
+        "body-sm": ["14px", { lineHeight: "1.5" }],
+        "caption": ["12px", { lineHeight: "1.4" }],
       },
+      // Design tokens - shadows (neo-brutalist style)
       boxShadow: {
         "hard-1": "-2px 2px 8px 0px rgba(38, 38, 38, 0.20)",
         "hard-2": "0px 3px 10px 0px rgba(38, 38, 38, 0.20)",
@@ -201,6 +239,11 @@ module.exports = {
         "soft-2": "0px 0px 20px rgba(38, 38, 38, 0.2)",
         "soft-3": "0px 0px 30px rgba(38, 38, 38, 0.1)",
         "soft-4": "0px 0px 40px rgba(38, 38, 38, 0.1)",
+        // Neo-brutalist solid shadows
+        "solid-sm": "2px 2px 0px #000",
+        "solid-md": "4px 4px 0px #000",
+        "solid-lg": "6px 6px 0px #000",
+        "solid-xl": "8px 8px 0px #000",
       },
     },
   },
