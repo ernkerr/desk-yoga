@@ -9,13 +9,14 @@ import {
   Product,
   Purchase,
 } from "react-native-iap";
-import { setHasPaid } from "../utils/mmkvStorage";
+import { setHasPaid } from "@core/storage";
+import { IAP_CONFIG } from "@config/app.config";
 import { Button, ButtonText } from "./ui/button";
 import { Spinner } from "./ui/Spinner";
 
 const sku = Platform.select({
-  ios: "hearts_premium_ios", // product id
-  android: "hearts_premium_android",
+  ios: IAP_CONFIG.products.ios,
+  android: IAP_CONFIG.products.android,
 });
 
 export default function BuyButton({ onSuccess }: { onSuccess?: () => void }) {
