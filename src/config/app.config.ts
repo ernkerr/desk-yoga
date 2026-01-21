@@ -77,7 +77,7 @@ export function getAppDisplayName(): string {
  * Check if a promo code is valid.
  */
 export function isValidPromoCode(code: string): boolean {
-  return IAP_CONFIG.promoCodes.includes(code.toUpperCase());
+  return (IAP_CONFIG.promoCodes as readonly string[]).includes(code.toUpperCase());
 }
 
 // Type exports
