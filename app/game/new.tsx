@@ -1,36 +1,34 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView } from "react-native";
 import { useRouter, Stack } from "expo-router";
-import { Button, ButtonText } from "../../src/components/ui/button";
-import { Input, InputField } from "../../src/components/ui/input";
-import { Box } from "../../src/components/ui/box";
-import { Text } from "../../src/components/ui/text";
-import {
-  ColorPicker,
-  COLOR_PICKER_PALETTE,
-} from "../../src/components/ui/ColorPicker";
+import { Button, ButtonText } from "@ui/button";
+import { Input, InputField } from "@ui/input";
+import { Box } from "@ui/box";
+import { Text } from "@ui/text";
+import { COLOR_PICKER_PALETTE } from "@ui/ColorPicker";
 import {
   getGames,
   saveGames,
   getUserName,
   generateId,
   getTargetScore,
-  type Player,
-  type Game,
-} from "../../src/utils/mmkvStorage";
-import { X } from "lucide-react-native";
+} from "@core/storage";
+import type { Player } from "@core/types";
+import { FEATURES } from "@config/app.config";
+import { PlayerSetup } from "@components/PlayerSetup";
+import type { HeartsGame } from "@games/hearts";
 
 // Screen for creating a new game with multiple players
 export default function NewGameScreen() {
   const router = useRouter();
   const [players, setPlayers] = useState<Player[]>([]);
-  const [targetScore, setTargetScore] = useState("");
+  const [targetScore, setTargetScoreState] = useState("");
 
   // Initialize with user as first player
   useEffect(() => {
     const userName = getUserName();
     const defaultTarget = getTargetScore();
-    setTargetScore(defaultTarget.toString());
+    setTargetScoreState(defaultTarget.toString());
 
     const userPlayer: Player = {
       id: generateId(),
@@ -54,7 +52,7 @@ export default function NewGameScreen() {
   }
 
   function handleAddPlayer() {
-    if (players.length >= 5) return; // Max 5 players for MVP
+    if (players.length >= FEATURES.maxPlayers) return;
 
     const newPlayer: Player = {
       id: generateId(),
@@ -74,8 +72,8 @@ export default function NewGameScreen() {
 
   function handleCreateGame() {
     // Validation
-    if (players.length < 3) {
-      alert("You need at least 3 players to start a game");
+    if (players.length < FEATURES.minPlayers) {
+      alert(`You need at least ${FEATURES.minPlayers} players to start a game`);
       return;
     }
 
@@ -92,7 +90,7 @@ export default function NewGameScreen() {
     }
 
     // Create new game
-    const newGame: Game = {
+    const newGame: HeartsGame = {
       id: generateId(),
       date: new Date().toISOString(),
       players: players.map((p) => ({ ...p, name: p.name.trim() })),
@@ -103,7 +101,7 @@ export default function NewGameScreen() {
     };
 
     // Save to storage
-    const games = getGames();
+    const games = getGames<HeartsGame>();
     games.push(newGame);
     saveGames(games);
 
@@ -122,60 +120,14 @@ export default function NewGameScreen() {
 
       <ScrollView className="flex-1 bg-gray-100">
         <Box className="p-8">
-          {players.map((player, index) => (
-            <Box
-              key={player.id}
-              className="bg-white rounded-2xl border-2 border-black p-4 mb-6"
-              style={{ boxShadow: "4px 4px 0px #000" }}
-            >
-              <Box className="flex-row items-center mb-4 gap-2">
-                <Box className="flex-1">
-                  <Input
-                    size="lg"
-                    className="border-2 border-black rounded-xl"
-                    style={{ boxShadow: "2px 2px 0px #000" }}
-                  >
-                    <InputField
-                      value={player.name}
-                      onChangeText={(text) =>
-                        handleUpdatePlayerName(index, text)
-                      }
-                      placeholder={index === 0 ? "You" : `Player ${index + 1}`}
-                      style={{ fontFamily: "SpaceMonoRegular" }}
-                    />
-                  </Input>
-                </Box>
-                {index > 0 && (
-                  <Button
-                    onPress={() => handleRemovePlayer(index)}
-                    className="bg-red-500 border-2 border-black rounded-xl p-2"
-                    size="lg"
-                    style={{ boxShadow: "2px 2px 0px #000" }}
-                  >
-                    <X size={20} color="#fff" />
-                  </Button>
-                )}
-              </Box>
-
-              <ColorPicker
-                selectedColor={player.color}
-                onSelect={(color) => handleUpdatePlayerColor(index, color)}
-              />
-            </Box>
-          ))}
-
-          {players.length < 5 && (
-            <Button
-              size="xl"
-              onPress={handleAddPlayer}
-              className=" border-2 border-black rounded-xl mb-6"
-              style={{ boxShadow: "4px 4px 0px #000" }}
-            >
-              <ButtonText style={{ fontFamily: "Card", fontSize: 16 }}>
-                + Add Player
-              </ButtonText>
-            </Button>
-          )}
+          <PlayerSetup
+            players={players}
+            onUpdateName={handleUpdatePlayerName}
+            onUpdateColor={handleUpdatePlayerColor}
+            onAddPlayer={handleAddPlayer}
+            onRemovePlayer={handleRemovePlayer}
+            maxPlayers={FEATURES.maxPlayers}
+          />
 
           <Box
             className="bg-white rounded-2xl border-2 border-black p-4 mb-6"
@@ -194,7 +146,7 @@ export default function NewGameScreen() {
             >
               <InputField
                 value={targetScore}
-                onChangeText={setTargetScore}
+                onChangeText={setTargetScoreState}
                 placeholder="100"
                 keyboardType="numeric"
                 style={{ fontFamily: "SpaceMonoRegular" }}
