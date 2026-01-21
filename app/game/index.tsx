@@ -1,30 +1,27 @@
 import React, { useState } from "react";
 import { FlatList, Pressable } from "react-native";
 import { useFocusEffect, useRouter, Stack } from "expo-router";
-import { Box } from "../../src/components/ui/box";
-import { Text } from "../../src/components/ui/text";
-import { Button, ButtonText } from "../../src/components/ui/button";
-import { Avatar, AvatarFallbackText } from "../../src/components/ui/avatar";
-import {
-  getGames,
-  getHasPaid,
-  getUserName,
-  type Game,
-} from "../../src/utils/mmkvStorage";
+import { Box } from "@ui/box";
+import { Text } from "@ui/text";
+import { Button, ButtonText } from "@ui/button";
+import { getGames, getHasPaid } from "@core/storage";
+import { FEATURES } from "@config/app.config";
 import { SettingsIcon } from "lucide-react-native";
-import PaywallModal from "../../src/components/PaywallModal";
+import PaywallModal from "@components/PaywallModal";
+import { GameCard } from "@components/GameCard";
+import type { HeartsGame } from "@games/hearts";
 
-// Main screen that lists all games (replaces opponents list)
+// Main screen that lists all games
 export default function GamesScreen() {
   const router = useRouter();
-  const [games, setGames] = useState<Game[]>([]);
+  const [games, setGames] = useState<HeartsGame[]>([]);
   const [hasPaid, setHasPaidState] = useState(false);
   const [showPaywallModal, setShowPaywallModal] = useState(false);
 
   // Load games when the screen gains focus
   useFocusEffect(
     React.useCallback(() => {
-      const allGames = getGames();
+      const allGames = getGames<HeartsGame>();
       // Sort by most recent
       const sorted = [...allGames].sort(
         (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
@@ -35,8 +32,8 @@ export default function GamesScreen() {
   );
 
   function handleStartNewGame() {
-    // Paywall: free users can only have 1 game
-    if (!hasPaid && games.length >= 1) {
+    // Paywall: free users can only have limited games
+    if (!hasPaid && games.length >= FEATURES.maxFreeGames) {
       setShowPaywallModal(true);
       return;
     }
@@ -50,86 +47,6 @@ export default function GamesScreen() {
   function handleSettings() {
     router.push("/settings");
   }
-
-  const renderGame = ({ item }: { item: Game }) => {
-    // Determine game status
-    const isInProgress = item.status === "in_progress";
-    const statusText = isInProgress
-      ? "Continue Game"
-      : `Winner: ${
-          item.players.find((p) => p.id === item.winner)?.name || "Unknown"
-        }`;
-
-    // Format date
-    const gameDate = new Date(item.date);
-    const now = new Date();
-    const diffHours = (now.getTime() - gameDate.getTime()) / (1000 * 60 * 60);
-    let timeAgo = "";
-    if (diffHours < 1) timeAgo = "Just now";
-    else if (diffHours < 24) timeAgo = `${Math.floor(diffHours)}h ago`;
-    else timeAgo = `${Math.floor(diffHours / 24)}d ago`;
-
-    return (
-      <Pressable
-        className="bg-white rounded-2xl border-2 border-black p-4 mb-8 mr-2"
-        onPress={() => handleGamePress(item.id)}
-        style={{
-          boxShadow: "4px 4px 0px #000",
-          // backgroundColor: isInProgress ? "#d4edda" : "#fff",
-        }}
-      >
-        {/* Player Avatars Row */}
-        <Box className="flex-row mb-2">
-          {item.players.slice(0, 5).map((player, index) => (
-            <Avatar
-              key={player.id}
-              size="lg"
-              className="border-2 border-black"
-              style={{
-                backgroundColor: player.color || "#fff",
-                boxShadow: "2px 2px 0px #000",
-                marginLeft: index > 0 ? -8 : 0,
-                zIndex: item.players.length - index,
-              }}
-            >
-              <AvatarFallbackText style={{ fontFamily: "Card", color: "#000" }}>
-                {player.name
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")
-                  .toUpperCase()
-                  .slice(0, 2)}
-              </AvatarFallbackText>
-            </Avatar>
-          ))}
-        </Box>
-
-        {/* Player Names */}
-        <Text
-          className="text-black  mb-1"
-          style={{ fontFamily: "SpaceMonoRegular" }}
-        >
-          {item.players.map((p) => p.name).join(", ")}
-        </Text>
-
-        {/* Status */}
-        <Text
-          className="text-black font-bold text-lg"
-          style={{ fontFamily: "Card" }}
-        >
-          {statusText}
-        </Text>
-
-        {/* Time */}
-        <Text
-          className="text-gray-500 mt-1 text-sm"
-          style={{ fontFamily: "SpaceMonoRegular" }}
-        >
-          {timeAgo}
-        </Text>
-      </Pressable>
-    );
-  };
 
   return (
     <>
@@ -168,7 +85,9 @@ export default function GamesScreen() {
         ) : (
           <FlatList
             data={games}
-            renderItem={renderGame}
+            renderItem={({ item }) => (
+              <GameCard game={item} onPress={handleGamePress} />
+            )}
             keyExtractor={(item) => item.id}
             contentContainerStyle={{ paddingBottom: 100 }}
           />
