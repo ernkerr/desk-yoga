@@ -12,7 +12,8 @@ import {
 import { Button, ButtonText } from "./ui/button";
 import { Input, InputField } from "./ui/input";
 import BuyButton from "./BuyButton";
-import { setHasPaid } from "../utils/mmkvStorage";
+import { setHasPaid } from "@core/storage";
+import { isValidPromoCode } from "@config/app.config";
 
 interface PaywallModalProps {
   isOpen: boolean;
@@ -34,9 +35,9 @@ export default function PaywallModal({
   const [codeLoading, setCodeLoading] = useState(false);
   const [codeError, setCodeError] = useState("");
 
-  // Default code validator (for demo, accepts 'GRATITUDE')
+  // Default code validator using config
   const defaultValidator = async (input: string) =>
-    input.trim().toUpperCase() === "GRATITUDE";
+    isValidPromoCode(input.trim());
 
   function handleCodeSubmit() {
     setCodeLoading(true);
