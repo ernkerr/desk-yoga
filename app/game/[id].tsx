@@ -1,27 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, Stack } from "expo-router";
 import { Pressable, ScrollView, View } from "react-native";
-import { calculateWinner, getAllPlayerTotals } from "../../src/utils/gameLogic";
-import {
-  getGameById,
-  updateGame,
-  type Game,
-  type Round,
-} from "../../src/utils/mmkvStorage";
+import { getGameById, updateGame } from "@core/storage";
+import { getPlayerInitials, getPlayerFirstName } from "@core/playerManager";
+import { heartsEngine, type HeartsGame, type HeartsRound, type HeartsBonusType } from "@games/hearts";
+import { HeartsScoreModal } from "@games/hearts/components/HeartsScoreModal";
 
-//ui
+// UI
 import LottieView from "lottie-react-native";
 import { Crown, Pencil } from "lucide-react-native";
-import { Box } from "@/src/components/ui/box";
-import { Text } from "@/src/components/ui/text";
-import { Button, ButtonText } from "../../src/components/ui/button";
-import { Avatar, AvatarFallbackText } from "../../src/components/ui/avatar";
-import { MultiPlayerScoreModal } from "../../src/components/MultiPlayerScoreModal";
+import { Box } from "@ui/box";
+import { Text } from "@ui/text";
+import { Button, ButtonText } from "@ui/button";
+import { Avatar, AvatarFallbackText } from "@ui/avatar";
 
 // Game detail screen showing scoreboard and rounds
 export default function GameDetailScreen() {
   const { id } = useLocalSearchParams();
-  const [game, setGame] = useState<Game | null>(null);
+  const [game, setGame] = useState<HeartsGame | null>(null);
   const [scoreModalVisible, setScoreModalVisible] = useState(false);
   const [editRoundIndex, setEditRoundIndex] = useState<number | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -29,7 +25,7 @@ export default function GameDetailScreen() {
   // Load game data
   useEffect(() => {
     if (typeof id === "string") {
-      const foundGame = getGameById(id);
+      const foundGame = getGameById<HeartsGame>(id);
       setGame(foundGame);
 
       // Show confetti if game just completed
@@ -42,20 +38,20 @@ export default function GameDetailScreen() {
 
   // Handler for adding or editing a round
   function handleSaveRound(
-    scores: { [playerId: string]: number },
-    bonusType?: "queenOfSpades" | "shootMoon" | null,
+    scores: Record<string, number>,
+    bonusType?: HeartsBonusType,
     bonusPlayerId?: string
   ) {
     if (!game) return;
 
-    const newRound: Round = {
+    const newRound: HeartsRound = {
       date: new Date().toISOString(),
       scores,
       bonusType: bonusType || null,
       bonusPlayerId: bonusPlayerId || undefined,
     };
 
-    let updatedRounds: Round[];
+    let updatedRounds: HeartsRound[];
     if (editRoundIndex !== null) {
       // Editing existing round
       updatedRounds = [...game.rounds];
@@ -65,8 +61,8 @@ export default function GameDetailScreen() {
       updatedRounds = [...game.rounds, newRound];
     }
 
-    // Calculate winner
-    const winnerId = calculateWinner(
+    // Calculate winner using Hearts engine
+    const winnerId = heartsEngine.calculateWinner(
       updatedRounds,
       game.players,
       game.targetScore
@@ -74,7 +70,7 @@ export default function GameDetailScreen() {
     const newStatus = winnerId ? "completed" : "in_progress";
 
     // Update game
-    const updatedGame: Game = {
+    const updatedGame: HeartsGame = {
       ...game,
       rounds: updatedRounds,
       winner: winnerId,
@@ -111,7 +107,7 @@ export default function GameDetailScreen() {
     );
   }
 
-  const playerTotals = getAllPlayerTotals(game.rounds, game.players);
+  const playerTotals = heartsEngine.getAllPlayerTotals(game.rounds, game.players);
   const lowestScore = Math.min(...Object.values(playerTotals));
   const winnerPlayer = game.winner
     ? game.players.find((p) => p.id === game.winner)
@@ -129,7 +125,7 @@ export default function GameDetailScreen() {
         }}
       />
 
-      <MultiPlayerScoreModal
+      <HeartsScoreModal
         visible={scoreModalVisible}
         onClose={() => {
           setScoreModalVisible(false);
@@ -164,8 +160,6 @@ export default function GameDetailScreen() {
 
         <Box className="flex-1 bg-gray-100">
           <ScrollView className="flex-1">
-            {/* Scoreboard Header */}
-
             {/* Winner Message */}
             {game.status === "completed" && winnerPlayer && (
               <Box
@@ -188,7 +182,7 @@ export default function GameDetailScreen() {
                   style={{
                     fontFamily: "Card",
                     color: "#000",
-                    textTransform: "uppercase"
+                    textTransform: "uppercase",
                   }}
                 >
                   {winnerPlayer.name}
@@ -196,154 +190,149 @@ export default function GameDetailScreen() {
               </Box>
             )}
 
-          {/* Rounds List */}
-          <Box className="p-6">
-            {/* Header Row - Always visible */}
-            <Box className="flex-row items-center px-2 py-2 mb-2">
-              <View style={{ width: 30 }} />
-              {game.players.map((player) => {
-                const total = playerTotals[player.id] || 0;
-                const isLeader =
-                  total === lowestScore && game.rounds.length > 0;
+            {/* Rounds List */}
+            <Box className="p-6">
+              {/* Header Row - Always visible */}
+              <Box className="flex-row items-center px-2 py-2 mb-2">
+                <View style={{ width: 30 }} />
+                {game.players.map((player) => {
+                  const total = playerTotals[player.id] || 0;
+                  const isLeader =
+                    total === lowestScore && game.rounds.length > 0;
 
-                return (
-                  <Box
-                    key={player.id}
-                    style={{ flex: 3 }}
-                    className="items-center"
-                  >
-                    <View
-                      style={{
-                        height: 24,
-                        marginBottom: 4,
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
+                  return (
+                    <Box
+                      key={player.id}
+                      style={{ flex: 3 }}
+                      className="items-center"
                     >
-                      {isLeader && <Crown size={24} color="#FFD700" />}
-                    </View>
-                    <Avatar
-                      size="lg"
-                      className="border-2 border-black mb-2"
-                      style={{
-                        backgroundColor: player.color,
-                        boxShadow: "2px 2px 0px #000",
-                      }}
-                    >
-                      <AvatarFallbackText
+                      <View
                         style={{
-                          fontFamily: "Card",
-                          color: "#000",
-                          fontSize: 20,
+                          height: 24,
+                          marginBottom: 4,
+                          justifyContent: "center",
+                          alignItems: "center",
                         }}
                       >
-                        {player.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")
-                          .toUpperCase()
-                          .slice(0, 2)}
-                      </AvatarFallbackText>
-                    </Avatar>
-                    <Text
-                      className="text-center text-base mb-1 font-semibold"
-                      style={{ fontFamily: "SpaceMonoRegular" }}
-                      numberOfLines={1}
-                    >
-                      {player.name.split(" ")[0]}
-                    </Text>
-                    <Text
-                      className="font-bold text-xl"
-                      style={{ fontFamily: "Card" }}
-                    >
-                      {total}
-                    </Text>
-                  </Box>
-                );
-              })}
-              <View style={{ width: 30 }} />
-            </Box>
+                        {isLeader && <Crown size={24} color="#FFD700" />}
+                      </View>
+                      <Avatar
+                        size="lg"
+                        className="border-2 border-black mb-2"
+                        style={{
+                          backgroundColor: player.color,
+                          boxShadow: "2px 2px 0px #000",
+                        }}
+                      >
+                        <AvatarFallbackText
+                          style={{
+                            fontFamily: "Card",
+                            color: "#000",
+                            fontSize: 20,
+                          }}
+                        >
+                          {getPlayerInitials(player.name)}
+                        </AvatarFallbackText>
+                      </Avatar>
+                      <Text
+                        className="text-center text-base mb-1 font-semibold"
+                        style={{ fontFamily: "SpaceMonoRegular" }}
+                        numberOfLines={1}
+                      >
+                        {getPlayerFirstName(player.name)}
+                      </Text>
+                      <Text
+                        className="font-bold text-xl"
+                        style={{ fontFamily: "Card" }}
+                      >
+                        {total}
+                      </Text>
+                    </Box>
+                  );
+                })}
+                <View style={{ width: 30 }} />
+              </Box>
 
-            {game.rounds.length === 0 ? (
-              <Box
-                className="bg-white border-2 border-black rounded-xl p-8 mt-4"
+              {game.rounds.length === 0 ? (
+                <Box
+                  className="bg-white border-2 border-black rounded-xl p-8 mt-4"
+                  style={{ boxShadow: "4px 4px 0px #000" }}
+                >
+                  <Text
+                    className="text-center text-gray-500"
+                    style={{ fontFamily: "SpaceMonoRegular" }}
+                  >
+                    No rounds yet. Add your first round!
+                  </Text>
+                </Box>
+              ) : (
+                <>
+                  {/* Round Rows */}
+                  <Text
+                    className="font-bold text-lg mb-4"
+                    style={{ fontFamily: "SpaceMonoRegular" }}
+                  >
+                    Round
+                  </Text>
+                  {game.rounds.map((round, index) => (
+                    <Box
+                      key={index}
+                      className="flex-row items-center px-2 py-3 bg-gray-100 rounded-lg mb-2"
+                    >
+                      <View style={{ width: 30, alignItems: "center" }}>
+                        <Text
+                          className="text-gray-500"
+                          style={{
+                            fontFamily: "SpaceMonoRegular",
+                          }}
+                        >
+                          {index + 1}
+                        </Text>
+                      </View>
+                      {game.players.map((player) => (
+                        <Text
+                          key={player.id}
+                          className="text-gray-600"
+                          style={{
+                            fontFamily: "SpaceMonoRegular",
+                            flex: 3,
+                            textAlign: "center",
+                          }}
+                        >
+                          {round.scores[player.id] || 0}
+                        </Text>
+                      ))}
+                      <View style={{ width: 30, alignItems: "center" }}>
+                        <Pressable
+                          onPress={() => handleEditRound(index)}
+                          accessibilityLabel={`Edit round ${index + 1}`}
+                        >
+                          <Pencil size={18} color="gray" />
+                        </Pressable>
+                      </View>
+                    </Box>
+                  ))}
+                </>
+              )}
+            </Box>
+          </ScrollView>
+
+          {/* Add Round Button */}
+          {game.status === "in_progress" && (
+            <Box className="p-6">
+              <Button
+                size="xl"
+                onPress={handleAddRound}
+                className="rounded-xl mb-4"
                 style={{ boxShadow: "4px 4px 0px #000" }}
               >
-                <Text
-                  className="text-center text-gray-500"
-                  style={{ fontFamily: "SpaceMonoRegular" }}
-                >
-                  No rounds yet. Add your first round!
-                </Text>
-              </Box>
-            ) : (
-              <>
-                {/* Round Rows */}
-                <Text
-                  className="font-bold text-lg mb-4"
-                  style={{ fontFamily: "SpaceMonoRegular" }}
-                >
-                  Round
-                </Text>
-                {game.rounds.map((round, index) => (
-                  <Box
-                    key={index}
-                    className="flex-row items-center px-2 py-3 bg-gray-100 rounded-lg mb-2"
-                  >
-                    <View style={{ width: 30, alignItems: "center" }}>
-                      <Text
-                        className="text-gray-500"
-                        style={{
-                          fontFamily: "SpaceMonoRegular",
-                        }}
-                      >
-                        {index + 1}
-                      </Text>
-                    </View>
-                    {game.players.map((player) => (
-                      <Text
-                        key={player.id}
-                        className="text-gray-600"
-                        style={{
-                          fontFamily: "SpaceMonoRegular",
-                          flex: 3,
-                          textAlign: "center",
-                        }}
-                      >
-                        {round.scores[player.id] || 0}
-                      </Text>
-                    ))}
-                    <View style={{ width: 30, alignItems: "center" }}>
-                      <Pressable
-                        onPress={() => handleEditRound(index)}
-                        accessibilityLabel={`Edit round ${index + 1}`}
-                      >
-                        <Pencil size={18} color="gray" />
-                      </Pressable>
-                    </View>
-                  </Box>
-                ))}
-              </>
-            )}
-          </Box>
-        </ScrollView>
-
-        {/* Add Round Button */}
-        {game.status === "in_progress" && (
-          <Box className="p-6">
-            <Button
-              size="xl"
-              onPress={handleAddRound}
-              className="rounded-xl mb-4"
-              style={{ boxShadow: "4px 4px 0px #000" }}
-            >
-              <ButtonText style={{ fontFamily: "Card", fontSize: 18 }}>
-                Add Round
-              </ButtonText>
-            </Button>
-          </Box>
-        )}
-      </Box>
+                <ButtonText style={{ fontFamily: "Card", fontSize: 18 }}>
+                  Add Round
+                </ButtonText>
+              </Button>
+            </Box>
+          )}
+        </Box>
       </>
     </>
   );
