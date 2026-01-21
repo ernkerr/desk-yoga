@@ -7,22 +7,18 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { Button, ButtonText } from "../src/components/ui/button";
-import { Input, InputField } from "../src/components/ui/input";
+import { Button, ButtonText } from "@ui/button";
+import { Input, InputField } from "@ui/input";
 import {
   getUserName,
   setUserName,
   getTargetScore,
   setTargetScore,
-  storage,
-} from "../src/utils/mmkvStorage";
+  clearAllData,
+} from "@core/storage";
 import { Stack, useRouter } from "expo-router";
-import { Box } from "@/src/components/ui/box";
-
-import * as RNIap from "react-native-iap";
-import RestoreButton from "@/src/components/RestoreButton";
-
-const validProductId = "hearts_premium_ios";
+import { Box } from "@ui/box";
+import RestoreButton from "@components/RestoreButton";
 
 // This screen lets the user view and change their name
 export default function SettingsScreen() {
@@ -30,7 +26,7 @@ export default function SettingsScreen() {
   // State to hold the user's name
   const [name, setName] = useState("");
   // State to hold target score
-  const [targetScore, setTargetScoreState] = useState(100);
+  const [targetScoreState, setTargetScoreState] = useState(100);
 
   // Load the user's name and target score when the screen loads
   useEffect(() => {
@@ -41,11 +37,11 @@ export default function SettingsScreen() {
   // Handler for saving the new name and target score
   function handleSave() {
     setUserName(name.trim() || "You");
-    setTargetScore(targetScore);
+    setTargetScore(targetScoreState);
     router.back();
   }
 
-  // Handler for clearing AsyncStorage
+  // Handler for clearing storage
   function handleClearStorage() {
     Alert.alert(
       "Are you sure?",
@@ -56,8 +52,8 @@ export default function SettingsScreen() {
           text: "Delete",
           style: "destructive",
           onPress: () => {
-            storage.clearAll();
-            alert("MMKV storage cleared! (restart app to see effect)");
+            clearAllData();
+            alert("Storage cleared! (restart app to see effect)");
           },
         },
       ]
@@ -123,7 +119,7 @@ export default function SettingsScreen() {
               >
                 <InputField
                   placeholder="Default Target Score"
-                  value={targetScore.toString()}
+                  value={targetScoreState.toString()}
                   onChangeText={(v: string) =>
                     setTargetScoreState(Number(v.replace(/[^0-9]/g, "")))
                   }
@@ -150,12 +146,10 @@ export default function SettingsScreen() {
               </Button>
             </View>
 
-            {/* Button to clear AsyncStorage */}
+            {/* Button to clear storage */}
             <Button
               size="sm"
               onPress={handleClearStorage}
-              // TODO: Add disabled state when paywall is implemented
-              // disabled={!hasPaid}
               className="mt-[95%] mb-16 bg-white w-[50%] ml-[25%] "
               style={{
                 boxShadow: "4px 4px 0px #000",
