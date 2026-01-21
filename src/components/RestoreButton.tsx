@@ -5,15 +5,16 @@ import {
   finishTransaction,
   Purchase,
 } from "react-native-iap";
-import { setHasPaid } from "../utils/mmkvStorage";
+import { setHasPaid } from "@core/storage";
+import { IAP_CONFIG } from "@config/app.config";
 import { Button, ButtonText } from "./ui/button";
 import { Spinner } from "./ui/Spinner";
 
 // Define the product ID based on platform
 // This matches the product ID configured in App Store Connect
 const sku = Platform.select({
-  ios: "hearts_premium_ios",
-  android: "hearts_premium_android",
+  ios: IAP_CONFIG.products.ios,
+  android: IAP_CONFIG.products.android,
 });
 
 export default function RestoreButton() {
