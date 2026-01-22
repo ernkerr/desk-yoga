@@ -3,10 +3,11 @@
  */
 
 import React from "react";
-import { Pressable } from "react-native";
+import { Pressable, Alert } from "react-native";
 import { Box } from "@ui/box";
 import { Text } from "@ui/text";
 import { Avatar, AvatarFallbackText } from "@ui/avatar";
+import { Trash2 } from "lucide-react-native";
 import type { BaseGame } from "@core/types";
 import { getPlayerInitials } from "@core/playerManager";
 import { formatTimeAgo } from "@core/utils";
@@ -14,6 +15,7 @@ import { formatTimeAgo } from "@core/utils";
 interface GameCardProps<T extends BaseGame> {
   game: T;
   onPress: (id: string) => void;
+  onDelete?: (id: string) => void;
   getStatusText?: (game: T) => string;
 }
 
