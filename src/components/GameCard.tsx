@@ -22,6 +22,7 @@ interface GameCardProps<T extends BaseGame> {
 export function GameCard<T extends BaseGame>({
   game,
   onPress,
+  onDelete,
   getStatusText,
 }: GameCardProps<T>) {
   const isInProgress = game.status === "in_progress";
@@ -36,12 +37,34 @@ export function GameCard<T extends BaseGame>({
 
   const timeAgo = formatTimeAgo(game.date);
 
+  function handleDelete() {
+    Alert.alert("Delete Game", "Are you sure you want to delete this game?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: () => onDelete?.(game.id),
+      },
+    ]);
+  }
+
   return (
     <Pressable
       className="bg-white rounded-2xl border-2 border-black p-4 mb-8 mr-2"
       onPress={() => onPress(game.id)}
       style={{ boxShadow: "4px 4px 0px #000" }}
     >
+      {/* Delete Button */}
+      {onDelete && (
+        <Pressable
+          onPress={handleDelete}
+          className="absolute top-3 right-3 p-2 z-10"
+          hitSlop={8}
+        >
+          <Trash2 size={20} color="#666" />
+        </Pressable>
+      )}
+
       {/* Player Avatars Row */}
       <Box className="flex-row mb-2">
         {game.players.slice(0, 5).map((player, index) => (
