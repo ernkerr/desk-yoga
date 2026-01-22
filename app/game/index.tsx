@@ -4,7 +4,7 @@ import { useFocusEffect, useRouter, Stack } from "expo-router";
 import { Box } from "@ui/box";
 import { Text } from "@ui/text";
 import { Button, ButtonText } from "@ui/button";
-import { getGames, getHasPaid } from "@core/storage";
+import { getGames, getHasPaid, deleteGame } from "@core/storage";
 import { FEATURES } from "@config/app.config";
 import { SettingsIcon } from "lucide-react-native";
 import PaywallModal from "@components/PaywallModal";
@@ -42,6 +42,11 @@ export default function GamesScreen() {
 
   function handleGamePress(id: string) {
     router.push(`/game/${id}`);
+  }
+
+  function handleDeleteGame(id: string) {
+    deleteGame(id);
+    setGames((prev) => prev.filter((g) => g.id !== id));
   }
 
   function handleSettings() {
@@ -86,7 +91,7 @@ export default function GamesScreen() {
           <FlatList
             data={games}
             renderItem={({ item }) => (
-              <GameCard game={item} onPress={handleGamePress} />
+              <GameCard game={item} onPress={handleGamePress} onDelete={handleDeleteGame} />
             )}
             keyExtractor={(item) => item.id}
             contentContainerStyle={{ paddingBottom: 100 }}
