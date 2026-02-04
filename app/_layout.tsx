@@ -17,7 +17,6 @@ export default function RootLayout() {
   // const colorScheme = useColorScheme();
   const [isSplashComplete, setSplashComplete] = useState(false);
   const [fontsLoaded] = useFonts({
-    Card: require("../assets/fonts/Card.ttf"),
     SpaceMono: require("../assets/fonts/SpaceMono-Bold.ttf"),
     SpaceMonoRegular: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });

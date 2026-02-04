@@ -1,9 +1,10 @@
 import React from "react";
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, Pressable } from "react-native";
 import { Stack, useRouter } from "expo-router";
 import { Button, ButtonText } from "@ui/button";
 import { Box } from "@ui/box";
 import { APP_CONFIG } from "@config/app.config";
+import { PRESETS } from "@/src/types/presets";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -57,31 +58,42 @@ export default function HomeScreen() {
             <ButtonText className="text-white">Start Session</ButtonText>
           </Button>
 
-          <Box className="rounded-lg p-4 mt-4">
-            <Text
-              className="text-lg font-semibold mb-2"
-              style={{ fontFamily: "Card" }}
-            >
-              Quick Stretch
-            </Text>
-            <Text
-              className="text-sm text-gray-600 mb-4"
-              style={{ fontFamily: "SpaceMonoRegular" }}
-            >
-              Take a quick 5-minute break to stretch and feel better.
-            </Text>
-            <Button
-              size="md"
-              action="secondary"
-              className="w-full"
-              style={{ boxShadow: "4px 4px 0px #000" }}
+          <Text
+            className="text-lg font-semibold mt-4 mb-2"
+            style={{ fontFamily: "Card" }}
+          >
+            Quick Relief
+          </Text>
+
+          {PRESETS.map((preset) => (
+            <Pressable
+              key={preset.id}
               onPress={() => {
-                // TODO: Quick stretch flow
+                // TODO: Start session with preset.config
               }}
             >
-              <ButtonText>5 Min Stretch</ButtonText>
-            </Button>
-          </Box>
+              <Box
+                className="rounded-lg p-4 mb-3 flex-row items-center"
+                style={{ borderWidth: 2, borderColor: "#000" }}
+              >
+                <Text className="text-3xl mr-4">{preset.icon}</Text>
+                <View className="flex-1">
+                  <Text
+                    className="text-base font-semibold"
+                    style={{ fontFamily: "Card" }}
+                  >
+                    {preset.name}
+                  </Text>
+                  <Text
+                    className="text-sm text-gray-600"
+                    style={{ fontFamily: "SpaceMonoRegular" }}
+                  >
+                    {preset.description}
+                  </Text>
+                </View>
+              </Box>
+            </Pressable>
+          ))}
         </View>
       </ScrollView>
     </>
