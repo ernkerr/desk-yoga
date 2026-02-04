@@ -1,6 +1,5 @@
 /**
- * Centralized app configuration.
- * Edit this file to customize the app for different games.
+ * Centralized app configuration for Desk Yoga.
  */
 
 export const APP_CONFIG = {
@@ -34,15 +33,10 @@ export const IAP_CONFIG = {
 
 export const FEATURES = {
   // Free tier limits
-  maxFreeGames: 1,
-  maxFreeScorePerPlayer: 100,
-
-  // Player configuration
-  minPlayers: 3,
-  maxPlayers: 5,
+  maxFreeSessions: 3, // Free users can do 3 sessions per day
+  maxFreeMinutes: 5, // Free sessions limited to 5 minutes
 
   // Default settings
-  defaultTargetScore: 100,
   defaultUserName: "You",
 
   // Feature flags
@@ -51,10 +45,10 @@ export const FEATURES = {
 } as const;
 
 export const STORAGE_KEYS = {
-  games: "games",
   hasPaid: "hasPaid",
   userName: "userName",
-  targetScore: "targetScore",
+  sessions: "sessions",
+  preferences: "preferences",
 } as const;
 
 // Helper functions
