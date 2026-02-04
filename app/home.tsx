@@ -6,9 +6,17 @@ import { Button, ButtonText } from "@ui/button";
 import { Ionicons } from "@expo/vector-icons";
 import { APP_CONFIG } from "@config/app.config";
 import { PRESETS } from "@/src/types/presets";
+import { getUserName } from "@/src/core";
 
 export default function HomeScreen() {
   const router = useRouter();
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 17) return "Good afternoon";
+    return "Good evening";
+  };
 
   return (
     <SafeAreaView className="flex-1">
@@ -26,6 +34,9 @@ export default function HomeScreen() {
             </Text>
             <Text className="text-base text-gray-600 text-center">
               {APP_CONFIG.tagline}
+            </Text>
+            <Text>
+              {getGreeting()}, {getUserName()}
             </Text>
           </View>
 
