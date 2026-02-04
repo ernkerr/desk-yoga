@@ -33,10 +33,9 @@ export function setHasPaid(val: boolean): void {
 
 /**
  * Retrieves the user's name from MMKV storage.
- * Defaults to 'You' if not set.
  */
 export function getUserName(): string {
-  return storage.getString(STORAGE_KEYS.userName) || "You";
+  return storage.getString(STORAGE_KEYS.userName) || "";
 }
 
 /**

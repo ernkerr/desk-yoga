@@ -37,24 +37,24 @@ cssInterop(PrimitiveIcon, {
 });
 
 const buttonStyle = tva({
-  base: "group/button rounded  flex-row items-center justify-center data-[focus-visible=true]:web:outline-none data-[focus-visible=true]:web:ring-2 data-[disabled=true]:opacity-40 gap-2",
+  base: "group/button rounded-lg flex-row items-center justify-center data-[focus-visible=true]:web:outline-none data-[focus-visible=true]:web:ring-2 data-[disabled=true]:opacity-40 gap-2",
   variants: {
     action: {
       primary:
-        "bg-[#26ABFF] border-2 border-black  rounded-md data-[hover=true]:bg-primary-600 data-[active=true]:bg-[#1A81CE] data-[hover=true]:border-primary-400 data-[active=true]:border-primary-500 data-[focus-visible=true]:web:ring-indicator-info",
+        "bg-gray-900 data-[hover=true]:bg-gray-800 data-[active=true]:bg-gray-700",
       secondary:
-        "bg-white border-2 border-black  rounded-md data-[hover=true]:bg-gray-100 data-[active=true]:bg-gray-300 data-[hover=true]:border-gray-400 data-[active=true]:border-gray-700 data-[focus-visible=true]:web:ring-indicator-info",
+        "bg-gray-100 data-[hover=true]:bg-gray-200 data-[active=true]:bg-gray-300",
       positive:
-        "bg-success-500 border-success-300 data-[hover=true]:bg-success-600 data-[hover=true]:border-success-400 data-[active=true]:bg-success-700 data-[active=true]:border-success-500 data-[focus-visible=true]:web:ring-indicator-info",
+        "bg-green-600 data-[hover=true]:bg-green-700 data-[active=true]:bg-green-800",
       negative:
-        "bg-error-500 border-error-300 data-[hover=true]:bg-error-600 data-[hover=true]:border-error-400 data-[active=true]:bg-error-700 data-[active=true]:border-error-500 data-[focus-visible=true]:web:ring-indicator-info",
+        "bg-red-600 data-[hover=true]:bg-red-700 data-[active=true]:bg-red-800",
       default:
-        "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
+        "bg-transparent data-[hover=true]:bg-gray-100 data-[active=true]:bg-transparent",
     },
     variant: {
       link: "px-0",
       outline:
-        "bg-transparent border data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
+        "bg-transparent border border-gray-300 data-[hover=true]:bg-gray-50 data-[active=true]:bg-transparent",
       solid: "",
     },
 
@@ -119,23 +119,18 @@ const buttonStyle = tva({
 });
 
 const buttonTextStyle = tva({
-  base: "text-typography-0 font-semibold web:select-none",
+  base: "font-medium web:select-none",
   parentVariants: {
     action: {
-      primary:
-        "text-white data-[hover=true]:text-white data-[active=true]:text-white",
-      secondary:
-        "text-black data-[hover=true]:text-black data-[active=true]:text-black",
-      positive:
-        "text-success-600 data-[hover=true]:text-success-600 data-[active=true]:text-success-700",
-      negative:
-        "text-error-600 data-[hover=true]:text-error-600 data-[active=true]:text-error-700",
+      primary: "text-white",
+      secondary: "text-gray-900",
+      positive: "text-white",
+      negative: "text-white",
     },
     variant: {
       link: "data-[hover=true]:underline data-[active=true]:underline",
-      outline: "text-black",
-      solid:
-        "text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0",
+      outline: "text-gray-900",
+      solid: "",
     },
     size: {
       xs: "text-xs",

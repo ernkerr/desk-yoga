@@ -37,7 +37,7 @@ export const FEATURES = {
   maxFreeMinutes: 5, // Free sessions limited to 5 minutes
 
   // Default settings
-  defaultUserName: "You",
+  defaultUserName: "",
 
   // Feature flags
   enablePaywall: true,
