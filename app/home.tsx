@@ -59,7 +59,10 @@ export default function HomeScreen() {
             <Pressable
               key={preset.id}
               onPress={() => {
-                // TODO: Start session with preset.config
+                router.push({
+                  pathname: "/session",
+                  params: preset.config,
+                });
               }}
             >
               {preset.image ? (
