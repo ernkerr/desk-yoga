@@ -33,9 +33,7 @@ export default function HomeScreen() {
             size="lg"
             action="primary"
             className="w-full mb-4"
-            onPress={() => {
-              // TODO: Start session flow
-            }}
+            onPress={() => router.push("/session-setup")}
           >
             <ButtonText>Start Session</ButtonText>
           </Button>
