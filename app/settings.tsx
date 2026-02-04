@@ -12,33 +12,27 @@ import { Input, InputField } from "@ui/input";
 import {
   getUserName,
   setUserName,
-  getTargetScore,
-  setTargetScore,
   clearAllData,
 } from "@core/storage";
 import { Stack, useRouter } from "expo-router";
 import { Box } from "@ui/box";
 import RestoreButton from "@components/RestoreButton";
 
-// This screen lets the user view and change their name
+// This screen lets the user view and change their settings
 export default function SettingsScreen() {
   const router = useRouter();
   // State to hold the user's name
   const [name, setName] = useState("");
-  // State to hold target score
-  const [targetScoreState, setTargetScoreState] = useState(100);
 
-  // Load the user's name and target score when the screen loads
+  // Load the user's name when the screen loads
   useEffect(() => {
     setName(getUserName());
-    setTargetScoreState(getTargetScore());
   }, []);
 
-  // Handler for saving the new name and target score
+  // Handler for saving the new name
   function handleSave() {
     setUserName(name.trim() || "You");
-    setTargetScore(targetScoreState);
-    router.back();
+    router.replace("/home");
   }
 
   // Handler for clearing storage
@@ -96,34 +90,6 @@ export default function SettingsScreen() {
                   placeholder="Name"
                   value={name}
                   onChangeText={setName}
-                  style={{ fontFamily: "SpaceMonoRegular" }}
-                />
-              </Input>
-            </Box>
-
-            {/* Target Score Input */}
-            <Box className=" rounded-lg p-4 pt-2 mb-24">
-              <Text
-                className="text-lg font-semibold mb-2"
-                style={{ fontFamily: "Card" }}
-              >
-                Default Target Score
-              </Text>
-              <Input
-                size="lg"
-                isDisabled={false}
-                className="mb-2"
-                style={{
-                  boxShadow: "4px 4px 0px #000",
-                }}
-              >
-                <InputField
-                  placeholder="Default Target Score"
-                  value={targetScoreState.toString()}
-                  onChangeText={(v: string) =>
-                    setTargetScoreState(Number(v.replace(/[^0-9]/g, "")))
-                  }
-                  keyboardType="numeric"
                   style={{ fontFamily: "SpaceMonoRegular" }}
                 />
               </Input>

@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { Alert, Platform } from "react-native";
 import {
-  getProducts,
+  fetchProducts,
   requestPurchase,
   purchaseUpdatedListener,
   purchaseErrorListener,
   finishTransaction,
-  Product,
-  Purchase,
+  type Purchase,
 } from "react-native-iap";
 import { setHasPaid } from "@core/storage";
 import { IAP_CONFIG } from "@config/app.config";
 import { Button, ButtonText } from "./ui/button";
 import { Spinner } from "./ui/Spinner";
+
+// Simple product info we need for display
+type ProductInfo = {
+  displayName?: string | null;
+  title?: string;
+  displayPrice: string;
+};
 
 const sku = Platform.select({
   ios: IAP_CONFIG.products.ios,
@@ -20,7 +26,7 @@ const sku = Platform.select({
 });
 
 export default function BuyButton({ onSuccess }: { onSuccess?: () => void }) {
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<ProductInfo | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -29,8 +35,16 @@ export default function BuyButton({ onSuccess }: { onSuccess?: () => void }) {
 
     const init = async () => {
       try {
-        const products = await getProducts({ skus: [sku!] });
-        setProduct(products[0]);
+        // v14: use fetchProducts instead of getProducts
+        const products = await fetchProducts({ skus: [sku!] });
+        if (products && products.length > 0) {
+          const p = products[0];
+          setProduct({
+            displayName: p.displayName,
+            title: p.title,
+            displayPrice: p.displayPrice,
+          });
+        }
       } catch (err) {
         console.warn("Error loading IAP products", err);
       }
@@ -39,11 +53,10 @@ export default function BuyButton({ onSuccess }: { onSuccess?: () => void }) {
       purchaseUpdateSub = purchaseUpdatedListener(
         async (purchase: Purchase) => {
           try {
-            const receipt = purchase.transactionReceipt;
-            if (receipt) {
+            if (purchase.transactionId) {
               // Acknowledge / Finish transaction (very important!)
               await finishTransaction({ purchase });
-              await setHasPaid(true);
+              setHasPaid(true);
               setLoading(false);
               onSuccess?.();
             }
@@ -73,12 +86,27 @@ export default function BuyButton({ onSuccess }: { onSuccess?: () => void }) {
   const handleBuy = async () => {
     setLoading(true);
     try {
-      await requestPurchase({ sku: sku! });
+      // v14: requestPurchase takes { type, request: { ios/android } }
+      await requestPurchase({
+        type: "in-app",
+        request: Platform.select({
+          ios: { ios: { sku: sku! } },
+          android: { android: { skus: [sku!] } },
+        })!,
+      });
     } catch (err) {
       console.warn("Request purchase error", err);
       Alert.alert("Purchase failed", "Please try again.");
       setLoading(false);
     }
+  };
+
+  // Format price display - v14 uses displayPrice and displayName
+  const getPriceDisplay = () => {
+    if (!product) return "Loading...";
+    const name = product.displayName || product.title || "Premium";
+    const price = product.displayPrice || "";
+    return `Buy ${name} - ${price}`;
   };
 
   return (
@@ -93,11 +121,7 @@ export default function BuyButton({ onSuccess }: { onSuccess?: () => void }) {
       {loading ? (
         <Spinner />
       ) : (
-        <ButtonText className="text-white">
-          {product
-            ? `Buy ${product.title} - ${product.localizedPrice}`
-            : "Loading..."}
-        </ButtonText>
+        <ButtonText className="text-white">{getPriceDisplay()}</ButtonText>
       )}
     </Button>
   );

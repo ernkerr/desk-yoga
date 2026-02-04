@@ -3,7 +3,7 @@ import { Alert, Platform } from "react-native";
 import {
   getAvailablePurchases,
   finishTransaction,
-  Purchase,
+  type Purchase,
 } from "react-native-iap";
 import { setHasPaid } from "@core/storage";
 import { IAP_CONFIG } from "@config/app.config";
