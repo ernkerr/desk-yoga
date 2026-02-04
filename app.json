@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Hearts Score Tracker",
-    "slug": "hearts-score-tracker",
-    "scheme": "hearts-score-tracker",
+    "name": "Desk Yoga",
+    "slug": "desk-yoga",
+    "scheme": "desk-yoga",
     "version": "1.0.0",
     "splash": {
       "backgroundColor": "#000000",
@@ -13,8 +13,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "org.cybergoose.heartsscoretracker",
-      "buildNumber": "2",
+      "bundleIdentifier": "org.cybergoose.deskyoga",
+      "buildNumber": "0",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       },
@@ -23,7 +23,7 @@
       }
     },
     "android": {
-      "package": "org.cybergoose.heartsscoretracker",
+      "package": "org.cybergoose.deskyoga",
       "adaptiveIcon": {
         "backgroundColor": "#FFFFFF"
       }
@@ -41,13 +41,15 @@
             "store": "play"
           }
         }
-      ]
+      ],
+      "expo-router"
     ],
     "icon": "./assets/images/icon.png",
     "owner": "ernkerr",
     "extra": {
+      "router": {},
       "eas": {
-        "projectId": "0ebbd0c1-d9af-4a55-a820-39a496e98359"
+        "projectId": "2e786503-fade-4c13-8491-7d0655f209a9"
       }
     }
   }

@@ -5,28 +5,28 @@
 
 export const APP_CONFIG = {
   // App identity
-  name: "Hearts Score Tracker",
-  slug: "hearts-score-tracker",
-  scheme: "hearts-score-tracker",
+  name: "Desk Yoga",
+  slug: "desk-yoga",
+  scheme: "desk-yoga",
 
   // Display
-  displayName: "Hearts",
-  tagline: "Track your Hearts card game scores",
+  displayName: "Desk Yoga",
+  tagline: "Feel better while you work, not before or after it.",
 
   // Bundle identifiers (must be updated in app.json manually for EAS builds)
   ios: {
-    bundleIdentifier: "org.cybergoose.heartsscoretracker",
+    bundleIdentifier: "org.cybergoose.deskyoga",
   },
   android: {
-    package: "org.cybergoose.heartsscoretracker",
+    package: "org.cybergoose.deskyoga",
   },
 } as const;
 
 export const IAP_CONFIG = {
   // Product SKUs - must match App Store Connect / Google Play Console
   products: {
-    ios: "hearts_premium_ios",
-    android: "hearts_premium_android",
+    ios: "deskyoga_premium_ios",
+    android: "deskyoga_premium_android",
   },
   // Unlock codes (for promo access)
   promoCodes: ["GRATITUDE"],
@@ -77,7 +77,9 @@ export function getAppDisplayName(): string {
  * Check if a promo code is valid.
  */
 export function isValidPromoCode(code: string): boolean {
-  return (IAP_CONFIG.promoCodes as readonly string[]).includes(code.toUpperCase());
+  return (IAP_CONFIG.promoCodes as readonly string[]).includes(
+    code.toUpperCase(),
+  );
 }
 
 // Type exports
