@@ -1,11 +1,11 @@
-import type { Pose } from "../../types/pose.js";
+import type { Pose } from "../../types/pose";
 
 export const Poses: Pose[] = [
   // seated poses
   {
     id: "seated-crescent-moon",
     name: "Seated Crescent Moon",
-    image: "/assets/images/poses/seated/seated_crescent_moon.png",
+    image: require("@/assets/images/poses/seated/seated_crescent_moon.png"),
     instructions:
       "Sit tall. Inhale arms up. Exhale lean gently to one side, keeping both sit bones grounded.",
     tags: {
@@ -16,8 +16,8 @@ export const Poses: Pose[] = [
   },
   {
     id: "seated-pigeon-right",
-    name: "Seated Pigeon",
-    image: "/assets/images/poses/seated/seated_pigeon.png",
+    name: "Seated Pigeon (Right)",
+    image: require("@/assets/images/poses/seated/seated_pigeon.png"),
     instructions: "Sit tall. Lay your right ankle on your left knee. Breathe.",
     side: "right",
     tags: {
@@ -28,8 +28,8 @@ export const Poses: Pose[] = [
   },
   {
     id: "seated-pigeon-left",
-    name: "Seated Pigeon",
-    image: "/assets/images/poses/seated/seated_pigeon.png",
+    name: "Seated Pigeon (Left)",
+    image: require("@/assets/images/poses/seated/seated_pigeon.png"),
     instructions: "Sit tall. Lay your left ankle on your right knee. Breathe.",
     side: "left",
     tags: {
