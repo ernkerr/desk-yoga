@@ -7,7 +7,7 @@ import { BackButton } from "@/src/components/BackButton";
 export default function SessionSetupScreen() {
   const router = useRouter();
   const [step, setStep] = useState<"posture" | "duration">("posture");
-  const [posture, setPosture] = useState<"sitting" | "standing" | null>(null);
+  const [posture, setPosture] = useState<"sitting" | "standing">();
 
   const handleBack = () => {
     if (step === "duration") {
@@ -46,7 +46,9 @@ export default function SessionSetupScreen() {
               onPress={() => handlePosture("standing")}
               className="flex-1 py-12 rounded-xl border-2 border-gray-200"
             >
-              <Text className="text-xl font-semibold text-center">Standing</Text>
+              <Text className="text-xl font-semibold text-center">
+                Standing
+              </Text>
             </Pressable>
           </View>
         )}

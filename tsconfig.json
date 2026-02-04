@@ -14,7 +14,7 @@
     "paths": {
       "@/*": ["./*"],
       "@config/*": ["./src/config/*"],
-      "@core/*": ["./src/core/*"],
+      "@core/*": ["src/utils/*"],
       "@games/*": ["./src/games/*"],
       "@components/*": ["./src/components/*"],
       "@ui/*": ["./src/components/ui/*"],

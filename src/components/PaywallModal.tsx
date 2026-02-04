@@ -12,7 +12,7 @@ import {
 import { Button, ButtonText } from "./ui/button";
 import { Input, InputField } from "./ui/input";
 import BuyButton from "./BuyButton";
-import { setHasPaid } from "@core/storage";
+import { setHasPaid } from "@/src/utils/storage";
 import { isValidPromoCode } from "@config/app.config";
 
 interface PaywallModalProps {
@@ -43,7 +43,7 @@ export default function PaywallModal({
     setCodeLoading(true);
     setCodeError("");
     Promise.resolve(
-      codeValidator ? codeValidator(code) : defaultValidator(code)
+      codeValidator ? codeValidator(code) : defaultValidator(code),
     )
       .then((isValid) => {
         if (isValid) {

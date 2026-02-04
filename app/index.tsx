@@ -1,5 +1,5 @@
 import { Redirect } from "expo-router";
-import { getUserName } from "@/src/core";
+import { getUserName } from "@/src/utils/storage";
 
 export default function Index() {
   if (getUserName() === "") {

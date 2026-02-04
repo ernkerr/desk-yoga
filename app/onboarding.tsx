@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter } from "expo-router";
-import { setUserName } from "@/src/core";
+import { setUserName } from "@/src/utils/storage";
 
 // ui
 import { Box } from "@/src/components/ui/box";
@@ -23,27 +23,12 @@ export default function Onboarding() {
       <Stack.Screen options={{ headerShown: false }} />
       <Box className=" rounded-lg p-4 mb-2">
         <Text className="text-lg font-semibold mb-2 ">Name</Text>
-        <Input
-          size="lg"
-          isDisabled={false}
-          isInvalid={false}
-          isReadOnly={false}
-          style={{
-            boxShadow: "4px 4px 0px #000",
-          }}
-        >
+        <Input size="lg">
           <InputField placeholder="Name" value={name} onChangeText={setName} />
         </Input>
       </Box>
       <View className="flex-row mt-2 mb-28">
-        <Button
-          size="lg"
-          onPress={handleSave}
-          className="flex-1"
-          style={{
-            boxShadow: "4px 4px 0px #000",
-          }}
-        >
+        <Button size="lg" onPress={handleSave} className="flex-1">
           <ButtonText className="text-white">Save</ButtonText>
         </Button>
       </View>

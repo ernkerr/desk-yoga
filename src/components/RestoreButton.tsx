@@ -5,7 +5,7 @@ import {
   finishTransaction,
   type Purchase,
 } from "react-native-iap";
-import { setHasPaid } from "@core/storage";
+import { setHasPaid } from "@/src/utils/storage";
 import { IAP_CONFIG } from "@config/app.config";
 import { Button, ButtonText } from "./ui/button";
 import { Spinner } from "./ui/Spinner";
@@ -29,7 +29,7 @@ export default function RestoreButton() {
 
       // Find the specific premium purchase for this app
       const validPurchase = restoredPurchases.find(
-        (purchase) => purchase.productId === sku
+        (purchase) => purchase.productId === sku,
       );
 
       if (validPurchase) {
@@ -41,14 +41,14 @@ export default function RestoreButton() {
       } else {
         Alert.alert(
           "No Purchases Found",
-          "We couldn't find any previous purchases."
+          "We couldn't find any previous purchases.",
         );
       }
     } catch (err) {
       console.warn("Restore failed", err);
       Alert.alert(
         "Error",
-        "Failed to restore purchases. Please try again later."
+        "Failed to restore purchases. Please try again later.",
       );
     } finally {
       setLoading(false);

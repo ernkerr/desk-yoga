@@ -9,11 +9,7 @@ import {
 } from "react-native";
 import { Button, ButtonText } from "@ui/button";
 import { Input, InputField } from "@ui/input";
-import {
-  getUserName,
-  setUserName,
-  clearAllData,
-} from "@core/storage";
+import { getUserName, setUserName, clearAllData } from "@/src/utils/storage";
 import { Stack, useRouter } from "expo-router";
 import { Box } from "@ui/box";
 import RestoreButton from "@components/RestoreButton";
@@ -50,7 +46,7 @@ export default function SettingsScreen() {
             alert("Storage cleared! (restart app to see effect)");
           },
         },
-      ]
+      ],
     );
   }
 

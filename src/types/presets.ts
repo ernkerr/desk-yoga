@@ -1,4 +1,5 @@
 import type { SessionConfig } from "./session";
+import type { ImageSourcePropType } from "react-native";
 
 /**
  * A named preset with display info and pre-configured session settings
@@ -7,7 +8,7 @@ export type Preset = {
   id: string;
   name: string;
   description: string;
-  icon: string;
+  image: ImageSourcePropType | null;
   config: SessionConfig;
 };
 
@@ -19,7 +20,7 @@ export const PRESETS: Preset[] = [
     id: "mouse-hand-relief",
     name: "Mouse Hand Relief",
     description: "Ease tension from clicking and scrolling",
-    icon: "🖱️",
+    image: require("@/assets/images/poses/seated/wrist_stretch.png"),
     config: {
       mode: "just stretch",
       posture: "sitting",
@@ -33,7 +34,7 @@ export const PRESETS: Preset[] = [
     id: "tech-neck-reset",
     name: "Tech Neck Reset",
     description: "Release tension from screen time",
-    icon: "📱",
+    image: null,
     config: {
       mode: "just stretch",
       posture: "sitting",

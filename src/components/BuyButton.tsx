@@ -8,7 +8,7 @@ import {
   finishTransaction,
   type Purchase,
 } from "react-native-iap";
-import { setHasPaid } from "@core/storage";
+import { setHasPaid } from "@/src/utils/storage";
 import { IAP_CONFIG } from "@config/app.config";
 import { Button, ButtonText } from "./ui/button";
 import { Spinner } from "./ui/Spinner";
@@ -64,7 +64,7 @@ export default function BuyButton({ onSuccess }: { onSuccess?: () => void }) {
             setLoading(false);
             console.warn("Failed to finish transaction", ackErr);
           }
-        }
+        },
       );
 
       // Listen to purchase errors
