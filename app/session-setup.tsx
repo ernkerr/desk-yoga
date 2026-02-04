@@ -23,8 +23,15 @@ export default function SessionSetupScreen() {
   };
 
   const handleDuration = (minutes: number) => {
-    console.log("Starting session:", { posture, duration: minutes });
-    // TODO: Navigate to session
+    router.push({
+      pathname: "/session",
+      params: {
+        posture,
+        duration: minutes,
+        mode: "just stretch",
+        speed: "slow",
+      },
+    });
   };
 
   return (
