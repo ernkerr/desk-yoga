@@ -14,9 +14,6 @@ export type Pose = {
   tags: {
     allowed_posture: AllowedPosture;
     visibility: CameraVisibility;
-    focus_areas: FocusArea;
+    focus_areas: FocusArea[];
   };
 };
-
-// allow multiple focus areas?
-//
