@@ -20,7 +20,7 @@ export const PRESETS: Preset[] = [
     id: "mouse-hand-relief",
     name: "Mouse Hand Relief",
     description: "Ease tension from clicking and scrolling",
-    image: require("@/assets/images/poses/seated/wrist_stretch.png"),
+    image: require("@/assets/images/presets/mouse.png"),
     config: {
       mode: "just stretch",
       posture: "sitting",
@@ -34,7 +34,7 @@ export const PRESETS: Preset[] = [
     id: "tech-neck-reset",
     name: "Tech Neck Reset",
     description: "Release tension from screen time",
-    image: null,
+    image: require("@/assets/images/presets/pain_4.png"),
     config: {
       mode: "just stretch",
       posture: "sitting",
