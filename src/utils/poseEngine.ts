@@ -1,7 +1,7 @@
 import type { Pose } from "../types/pose";
 import type { SessionConfig } from "../types/session";
 import { Poses } from "../data/poses";
-import { getHistory } from "./sessionHistory";
+import { getHistory, addToHistory } from "./sessionHistory";
 
 /**
  * Find a pose by ID
@@ -58,4 +58,19 @@ export function getNextPose(config: SessionConfig, currentPoseId?: string): Pose
   if (pool.length === 0) return null;
 
   return pool[Math.floor(Math.random() * pool.length)];
+}
+
+/**
+ * Get next pose and update state via callback
+ */
+export function triggerNextPose(
+  config: SessionConfig,
+  currentPoseId: string | undefined,
+  setPose: (pose: Pose) => void
+) {
+  const next = getNextPose(config, currentPoseId);
+  if (next) {
+    setPose(next);
+    addToHistory(next.id);
+  }
 }

@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Image, Pressable } from "react-native";
+import React, { useState, useEffect, useCallback } from "react";
+import { View, Text, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter, useLocalSearchParams } from "expo-router";
 import { BackButton } from "@/src/components/BackButton";
-import { getNextPose } from "@/src/utils/poseEngine";
+import { SpeedToggle } from "@/src/components/SpeedToggle";
+import { getNextPose, triggerNextPose } from "@/src/utils/poseEngine";
 import { addToHistory, clearHistory } from "@/src/utils/sessionHistory";
+import { useTimer } from "@/src/utils/timerEngine";
 import type { Pose } from "@/src/types/pose";
 import type { SessionConfig } from "@/src/types/session";
 
@@ -23,6 +25,7 @@ export default function Session() {
   };
 
   const [currentPose, setCurrentPose] = useState<Pose | null>(null);
+  const [speed, setSpeed] = useState<SessionConfig["speed"]>("slow");
 
   // Get first pose on mount
   useEffect(() => {
@@ -34,13 +37,13 @@ export default function Session() {
     }
   }, []);
 
-  const handleNext = () => {
-    const next = getNextPose(config, currentPose?.id);
-    if (next) {
-      setCurrentPose(next);
-      addToHistory(next.id);
-    }
-  };
+  // Handle next pose (called by timer)
+  const handleNext = useCallback(() => {
+    triggerNextPose(config, currentPose?.id, setCurrentPose);
+  }, [config, currentPose?.id]);
+
+  // Timer auto-advances poses
+  useTimer(speed, handleNext);
 
   const handleEnd = () => {
     clearHistory();
@@ -61,7 +64,12 @@ export default function Session() {
 
       <BackButton onPress={handleEnd} />
 
-      <View className="flex-1 px-4">
+      {/* Speed Toggle - top right */}
+      <View className="absolute top-16 right-6 z-10">
+        <SpeedToggle speed={speed} onSpeedChange={setSpeed} />
+      </View>
+
+      <View className="flex-1 px-4 pt-16">
         {/* Pose Image */}
         <View className="flex-1 items-center justify-center">
           <Image
@@ -72,7 +80,7 @@ export default function Session() {
         </View>
 
         {/* Pose Info */}
-        <View className="mb-4">
+        <View className="mb-8">
           <Text className="text-2xl font-bold text-center mb-2">
             {currentPose.name}
           </Text>
@@ -80,16 +88,6 @@ export default function Session() {
             {currentPose.instructions}
           </Text>
         </View>
-
-        {/* Next Button */}
-        <Pressable
-          onPress={handleNext}
-          className="bg-black py-4 rounded-xl mb-4"
-        >
-          <Text className="text-white text-lg font-semibold text-center">
-            Next Pose
-          </Text>
-        </Pressable>
       </View>
     </SafeAreaView>
   );
