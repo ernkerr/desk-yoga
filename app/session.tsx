@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter, useLocalSearchParams } from "expo-router";
 import { BackButton } from "@/src/components/BackButton";
@@ -8,6 +8,7 @@ import {
   PoseTransitionGlowRef,
 } from "@/src/components/PoseTransitionGlow";
 import { SpeedToggle } from "@/src/components/SpeedToggle";
+import { PoseCard } from "@/src/components/PoseCard";
 import { TiledBackground } from "@/src/components/TiledBackground";
 import { getNextPose, triggerNextPose } from "@/src/utils/poseEngine";
 import { addToHistory, clearHistory } from "@/src/utils/sessionHistory";
@@ -88,30 +89,14 @@ export default function Session() {
       <BackButton onPress={handleEndPress} />
 
       {/* Speed Toggle - top right */}
-      <View className="absolute top-16 right-6 z-10">
+      {/* <View className="absolute top-16 right-6 z-10">
         <SpeedToggle speed={speed} onSpeedChange={setSpeed} />
+      </View> */}
+
+      <View className="flex-1 justify-center items-center">
+        <PoseCard pose={currentPose} />
       </View>
 
-      <View className="flex-1 px-4 pt-16">
-        {/* Pose Image */}
-        <View className="flex-1 items-center justify-center">
-          <Image
-            source={currentPose.image}
-            className="w-64 h-64"
-            resizeMode="contain"
-          />
-        </View>
-
-        {/* Pose Info */}
-        <View className="mb-8">
-          <Text className="text-2xl font-bold text-center mb-2">
-            {currentPose.name}
-          </Text>
-          <Text className="text-base text-gray-600 text-center">
-            {currentPose.instructions}
-          </Text>
-        </View>
-      </View>
       <PoseTransitionGlow ref={glowRef} onComplete={handleGlowComplete} />
     </SafeAreaView>
 
