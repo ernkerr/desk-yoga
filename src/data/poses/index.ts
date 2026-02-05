@@ -11,7 +11,7 @@ export const Poses: Pose[] = [
     tags: {
       allowed_posture: "sitting",
       visibility: "camera off",
-      focus_areas: "neck",
+      focus_areas: ["neck"],
     },
   },
   {
@@ -23,7 +23,7 @@ export const Poses: Pose[] = [
     tags: {
       allowed_posture: "sitting",
       visibility: "camera off",
-      focus_areas: "hips",
+      focus_areas: ["hips"],
     },
   },
   {
@@ -35,9 +35,20 @@ export const Poses: Pose[] = [
     tags: {
       allowed_posture: "sitting",
       visibility: "camera off",
-      focus_areas: "hips",
+      focus_areas: ["hips"],
     },
   },
 
   // standing poses
+  {
+    id: "mountain",
+    name: "Mountain",
+    image: require("@/assets/images/poses/standing/mountain.png"),
+    instructions: "Sit tall. Lay your left ankle on your right knee. Breathe.",
+    tags: {
+      allowed_posture: "standing",
+      visibility: "camera off",
+      focus_areas: [],
+    },
+  },
 ];
