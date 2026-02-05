@@ -7,6 +7,7 @@ import { SpeedToggle } from "@/src/components/SpeedToggle";
 import { getNextPose, triggerNextPose } from "@/src/utils/poseEngine";
 import { addToHistory, clearHistory } from "@/src/utils/sessionHistory";
 import { useTimer } from "@/src/utils/timerEngine";
+import { useSessionDuration } from "@/src/utils/sessionDuration";
 import type { Pose } from "@/src/types/pose";
 import type { SessionConfig } from "@/src/types/session";
 
@@ -45,7 +46,15 @@ export default function Session() {
   // Timer auto-advances poses
   useTimer(speed, handleNext);
 
-  const handleEnd = () => {
+  const handleEnd = useCallback(() => {
+    clearHistory();
+    router.back();
+  }, [router]);
+
+  // End session when duration is reached
+  useSessionDuration(config.duration, handleEnd);
+
+  const handleEndPress = () => {
     clearHistory();
     router.back();
   };
@@ -62,7 +71,7 @@ export default function Session() {
     <SafeAreaView className="flex-1 bg-white">
       <Stack.Screen options={{ headerShown: false }} />
 
-      <BackButton onPress={handleEnd} />
+      <BackButton onPress={handleEndPress} />
 
       {/* Speed Toggle - top right */}
       <View className="absolute top-16 right-6 z-10">

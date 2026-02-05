@@ -35,12 +35,12 @@ export default function HomeScreen() {
             </Pressable>
           </View>
           <View className="mb-4 items-center">
-            <Text className="text-2xl font-bold mb-2 text-center">
+            {/* <Text className="text-2xl font-bold mb-2 text-center">
               {APP_CONFIG.displayName}
-            </Text>
-            <Text className="text-base text-gray-600 text-center">
+            </Text> */}
+            {/* <Text className="text-base text-gray-600 text-center">
               {APP_CONFIG.tagline}
-            </Text>
+            </Text> */}
             <Text>
               {getGreeting()}, {getUserName()}
             </Text>
