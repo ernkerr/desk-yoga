@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter, useLocalSearchParams } from "expo-router";
 import { BackButton } from "@/src/components/BackButton";
 import { SpeedToggle } from "@/src/components/SpeedToggle";
+import { TiledBackground } from "@/src/components/TiledBackground";
 import { getNextPose, triggerNextPose } from "@/src/utils/poseEngine";
 import { addToHistory, clearHistory } from "@/src/utils/sessionHistory";
 import { useTimer } from "@/src/utils/timerEngine";
@@ -61,43 +62,47 @@ export default function Session() {
 
   if (!currentPose) {
     return (
-      <SafeAreaView className="flex-1 bg-white items-center justify-center">
-        <Text>No poses available for this configuration</Text>
-      </SafeAreaView>
+      <TiledBackground>
+        <SafeAreaView className="flex-1 bg-transparent items-center justify-center">
+          <Text>No poses available for this configuration</Text>
+        </SafeAreaView>
+      </TiledBackground>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <Stack.Screen options={{ headerShown: false }} />
+    <TiledBackground>
+      <SafeAreaView className="flex-1 bg-transparent">
+        <Stack.Screen options={{ headerShown: false }} />
 
-      <BackButton onPress={handleEndPress} />
+        <BackButton onPress={handleEndPress} />
 
-      {/* Speed Toggle - top right */}
-      <View className="absolute top-16 right-6 z-10">
-        <SpeedToggle speed={speed} onSpeedChange={setSpeed} />
-      </View>
-
-      <View className="flex-1 px-4 pt-16">
-        {/* Pose Image */}
-        <View className="flex-1 items-center justify-center">
-          <Image
-            source={currentPose.image}
-            className="w-64 h-64"
-            resizeMode="contain"
-          />
+        {/* Speed Toggle - top right */}
+        <View className="absolute top-16 right-6 z-10">
+          <SpeedToggle speed={speed} onSpeedChange={setSpeed} />
         </View>
 
-        {/* Pose Info */}
-        <View className="mb-8">
-          <Text className="text-2xl font-bold text-center mb-2">
-            {currentPose.name}
-          </Text>
-          <Text className="text-base text-gray-600 text-center">
-            {currentPose.instructions}
-          </Text>
+        <View className="flex-1 px-4 pt-16">
+          {/* Pose Image */}
+          <View className="flex-1 items-center justify-center">
+            <Image
+              source={currentPose.image}
+              className="w-64 h-64"
+              resizeMode="contain"
+            />
+          </View>
+
+          {/* Pose Info */}
+          <View className="mb-8">
+            <Text className="text-2xl font-bold text-center mb-2">
+              {currentPose.name}
+            </Text>
+            <Text className="text-base text-gray-600 text-center">
+              {currentPose.instructions}
+            </Text>
+          </View>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </TiledBackground>
   );
 }

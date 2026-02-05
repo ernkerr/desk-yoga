@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import type { SessionConfig } from "@/src/types/session";
 
 // Seconds per pose for each speed
-const DURATIONS = { still: 45, slow: 30, flow: 15 };
+const DURATIONS = { still: 60, slow: 45, flow: 30 };
 
 export function useTimer(speed: SessionConfig["speed"], onNext: () => void) {
   const [seconds, setSeconds] = useState(DURATIONS[speed]);
