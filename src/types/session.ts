@@ -5,6 +5,7 @@ export type SessionConfig = {
   posture: AllowedPosture;
   camera?: CameraVisibility;
   focus_area?: FocusArea;
-  speed: "still" | "slow" | "flow";
+  speed: "still" | "slow" | "flow" | "custom";
+  poseDuration?: number; // seconds per pose (used when speed is "custom")
   duration: number;
 };

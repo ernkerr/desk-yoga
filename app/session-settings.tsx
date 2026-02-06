@@ -6,7 +6,11 @@ import { BackButton } from "@/src/components/BackButton";
 import { SpeedToggle } from "@/src/components/SpeedToggle";
 import { Button, ButtonText } from "@/src/components/ui/button";
 import type { SessionConfig } from "@/src/types/session";
-import type { AllowedPosture, CameraVisibility, FocusArea } from "@/src/types/pose";
+import type {
+  AllowedPosture,
+  CameraVisibility,
+  FocusArea,
+} from "@/src/types/pose";
 
 export default function SessionSettings() {
   const router = useRouter();
@@ -14,19 +18,22 @@ export default function SessionSettings() {
 
   // Initialize state from route params
   const [speed, setSpeed] = useState<SessionConfig["speed"]>(
-    (params.speed as SessionConfig["speed"]) || "slow"
+    (params.speed as SessionConfig["speed"]) || "slow",
+  );
+  const [poseDuration, setPoseDuration] = useState<number>(
+    Number(params.poseDuration) || 90,
   );
   const [duration, setDuration] = useState<number>(
-    Number(params.duration) || 5
+    Number(params.duration) || 5,
   );
   const [posture, setPosture] = useState<AllowedPosture>(
-    (params.posture as AllowedPosture) || "sitting"
+    (params.posture as AllowedPosture) || "sitting",
   );
   const [camera, setCamera] = useState<CameraVisibility | undefined>(
-    params.camera as CameraVisibility | undefined
+    params.camera as CameraVisibility | undefined,
   );
   const [focusArea, setFocusArea] = useState<FocusArea | undefined>(
-    params.focus_area as FocusArea | undefined
+    params.focus_area as FocusArea | undefined,
   );
 
   const handleSave = () => {
@@ -38,6 +45,7 @@ export default function SessionSettings() {
         camera,
         focus_area: focusArea,
         speed,
+        poseDuration,
         duration,
       },
     });
@@ -65,9 +73,12 @@ export default function SessionSettings() {
         {/* Speed */}
         <View className="mb-6">
           <Text className="text-lg font-semibold mb-3">Speed</Text>
-          <View className="items-center">
-            <SpeedToggle speed={speed} onSpeedChange={setSpeed} />
-          </View>
+          <SpeedToggle
+            speed={speed}
+            onSpeedChange={setSpeed}
+            customDuration={poseDuration}
+            onCustomDurationChange={setPoseDuration}
+          />
         </View>
 
         {/* Duration */}

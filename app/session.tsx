@@ -9,7 +9,6 @@ import {
   PoseTransitionGlow,
   PoseTransitionGlowRef,
 } from "@/src/components/PoseTransitionGlow";
-import { SpeedToggle } from "@/src/components/SpeedToggle";
 import { PoseCard } from "@/src/components/PoseCard";
 import { TiledBackground } from "@/src/components/TiledBackground";
 import { getNextPose, triggerNextPose } from "@/src/utils/poseEngine";
@@ -30,11 +29,11 @@ export default function Session() {
     camera: params.camera as SessionConfig["camera"],
     focus_area: params.focus_area as SessionConfig["focus_area"],
     speed: (params.speed as SessionConfig["speed"]) || "slow",
+    poseDuration: params.poseDuration ? Number(params.poseDuration) : undefined,
     duration: Number(params.duration) || 5,
   };
 
   const [currentPose, setCurrentPose] = useState<Pose | null>(null);
-  const [speed, setSpeed] = useState<SessionConfig["speed"]>("slow");
   const glowRef = useRef<PoseTransitionGlowRef>(null);
 
   // Get first pose on mount
@@ -58,7 +57,7 @@ export default function Session() {
   }, [config, currentPose?.id]);
 
   // Timer auto-advances poses
-  useTimer(speed, handleNext);
+  useTimer(config.speed, handleNext, config.poseDuration);
 
   const handleEnd = useCallback(() => {
     clearHistory();
@@ -76,7 +75,10 @@ export default function Session() {
   const handleSettingsPress = () => {
     router.push({
       pathname: "/session-settings",
-      params: config,
+      params: {
+        ...config,
+        poseDuration: config.poseDuration,
+      },
     });
   };
 
