@@ -7,8 +7,8 @@ type SessionSettingsButtonProps = {
 
 export function SessionSettingsButton({ onPress }: SessionSettingsButtonProps) {
   return (
-    <Pressable onPress={onPress} className="absolute top-16 right-6 z-10 p-2">
-      <Ionicons name="settings-outline" size={24} color="#333" />
+    <Pressable onPress={onPress} className="absolute top-20 right-6 z-10 w-14 h-14 items-center justify-center">
+      <Ionicons name="settings-outline" size={32} color="#333" />
     </Pressable>
   );
 }

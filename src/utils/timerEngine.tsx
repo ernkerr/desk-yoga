@@ -9,6 +9,7 @@ export function useTimer(
   onNext: () => void,
   customDuration?: number,
   isPaused?: boolean,
+  resetTrigger?: number,
 ) {
   const getDuration = () => {
     if (speed === "custom") {
@@ -23,6 +24,13 @@ export function useTimer(
   useEffect(() => {
     setSeconds(getDuration());
   }, [speed, customDuration]);
+
+  // Reset timer when resetTrigger changes
+  useEffect(() => {
+    if (resetTrigger !== undefined && resetTrigger > 0) {
+      setSeconds(getDuration());
+    }
+  }, [resetTrigger]);
 
   // Countdown
   useEffect(() => {

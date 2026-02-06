@@ -4,7 +4,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter, useLocalSearchParams } from "expo-router";
 import { BackButton } from "@/src/components/BackButton";
-import { SkipButton } from "@/src/components/SkipButton";
 import { SessionSettingsButton } from "@/src/components/SessionSettingsButton";
 import {
   PoseTransitionGlow,
@@ -12,8 +11,8 @@ import {
 } from "@/src/components/PoseTransitionGlow";
 import { PoseCard } from "@/src/components/PoseCard";
 import { TiledBackground } from "@/src/components/TiledBackground";
-import { getNextPose, triggerNextPose } from "@/src/utils/poseEngine";
-import { addToHistory, clearHistory } from "@/src/utils/sessionHistory";
+import { getNextPose, triggerNextPose, getPoseById } from "@/src/utils/poseEngine";
+import { addToHistory, clearHistory, getHistory, popFromHistory } from "@/src/utils/sessionHistory";
 import { useTimer } from "@/src/utils/timerEngine";
 import { useSessionDuration } from "@/src/utils/sessionDuration";
 import type { Pose } from "@/src/types/pose";
@@ -36,7 +35,10 @@ export default function Session() {
 
   const [currentPose, setCurrentPose] = useState<Pose | null>(null);
   const [isPaused, setIsPaused] = useState(false);
+  const [resetTrigger, setResetTrigger] = useState(0);
+  const [redoClickCount, setRedoClickCount] = useState(0);
   const glowRef = useRef<PoseTransitionGlowRef>(null);
+  const redoTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Get first pose on mount
   useEffect(() => {
@@ -59,7 +61,33 @@ export default function Session() {
   }, [config, currentPose?.id]);
 
   // Timer auto-advances poses
-  useTimer(config.speed, handleNext, config.poseDuration, isPaused);
+  useTimer(config.speed, handleNext, config.poseDuration, isPaused, resetTrigger);
+
+  const handleRedo = () => {
+    if (redoClickCount === 0) {
+      // First click: reset pose timer
+      setResetTrigger((t) => t + 1);
+      setRedoClickCount(1);
+      redoTimeoutRef.current = setTimeout(() => setRedoClickCount(0), 2000);
+    } else {
+      // Second click: go back one pose
+      if (redoTimeoutRef.current) clearTimeout(redoTimeoutRef.current);
+      setRedoClickCount(0);
+      const history = getHistory();
+      if (history.length >= 2) {
+        popFromHistory(); // remove current
+        const prevId = popFromHistory(); // get previous
+        if (prevId) {
+          const prevPose = getPoseById(prevId);
+          if (prevPose) {
+            setCurrentPose(prevPose);
+            addToHistory(prevId); // re-add to history
+            setResetTrigger((t) => t + 1); // reset timer
+          }
+        }
+      }
+    }
+  };
 
   const handleEnd = useCallback(() => {
     clearHistory();
@@ -101,20 +129,21 @@ export default function Session() {
 
       <BackButton onPress={handleEndPress} />
       <SessionSettingsButton onPress={handleSettingsPress} />
-      <SkipButton onPress={() => triggerNextPose(config, currentPose?.id, setCurrentPose)} />
-
-      {/* Speed Toggle - top right */}
-      {/* <View className="absolute top-16 right-6 z-10">
-        <SpeedToggle speed={speed} onSpeedChange={setSpeed} />
-      </View> */}
 
       <View className="flex-1 justify-center items-center">
         <PoseCard pose={currentPose} />
-        <Pressable
-          onPress={() => setIsPaused(!isPaused)}
-          className="mt-4 w-14 h-14 rounded-full bg-black items-center justify-center"
-        >
-          <Ionicons name={isPaused ? "play" : "pause"} size={28} color="white" />
+      </View>
+
+      {/* Bottom control bar */}
+      <View className="absolute bottom-20 left-0 right-0 flex-row justify-between px-6 z-10">
+        <Pressable onPress={handleRedo} className="w-14 h-14 items-center justify-center">
+          <Ionicons name="refresh" size={32} color="#333" />
+        </Pressable>
+        <Pressable onPress={() => setIsPaused(!isPaused)} className="w-14 h-14 items-center justify-center">
+          <Ionicons name={isPaused ? "play" : "pause"} size={32} color="#333" />
+        </Pressable>
+        <Pressable onPress={() => triggerNextPose(config, currentPose?.id, setCurrentPose)} className="w-14 h-14 items-center justify-center">
+          <Ionicons name="play-forward" size={32} color="#333" />
         </Pressable>
       </View>
 

@@ -21,8 +21,8 @@ export function BackButton({ to, onPress }: BackButtonProps) {
   };
 
   return (
-    <Pressable onPress={handlePress} className="absolute top-16 left-6 z-10 p-2">
-      <Ionicons name="arrow-back" size={24} color="#333" />
+    <Pressable onPress={handlePress} className="absolute top-20 left-6 z-10 w-14 h-14 items-center justify-center">
+      <Ionicons name="arrow-back" size={32} color="#333" />
     </Pressable>
   );
 }
