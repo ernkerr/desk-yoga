@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter, useLocalSearchParams } from "expo-router";
 import { BackButton } from "@/src/components/BackButton";
 import { SpeedToggle } from "@/src/components/SpeedToggle";
+import { TimeSelector } from "@/src/components/TimeSelector";
 import { Button, ButtonText } from "@/src/components/ui/button";
 import type { SessionConfig } from "@/src/types/session";
 import type {
@@ -35,6 +36,9 @@ export default function SessionSettings() {
   const [focusArea, setFocusArea] = useState<FocusArea | undefined>(
     params.focus_area as FocusArea | undefined,
   );
+  const [isCustomDuration, setIsCustomDuration] = useState<boolean>(
+    ![2, 5, 10, 30, 45, 60, 90, 120].includes(Number(params.duration) || 5),
+  );
 
   const handleSave = () => {
     router.replace({
@@ -51,7 +55,6 @@ export default function SessionSettings() {
     });
   };
 
-  const durations = [2, 5, 10, 30];
   const focusAreas: FocusArea[] = ["wrist", "neck", "hips", "back"];
 
   return (
@@ -84,27 +87,26 @@ export default function SessionSettings() {
         {/* Duration */}
         <View className="mb-6">
           <Text className="text-lg font-semibold mb-3">Duration</Text>
-          <View className="flex-row flex-wrap gap-2">
-            {durations.map((d) => (
-              <Pressable
-                key={d}
-                onPress={() => setDuration(d)}
-                className={`px-4 py-3 rounded-lg border-2 ${
-                  duration === d
-                    ? "bg-black border-black"
-                    : "bg-white border-gray-200"
-                }`}
-              >
-                <Text
-                  className={`font-semibold ${
-                    duration === d ? "text-white" : "text-gray-700"
-                  }`}
-                >
-                  {d} min
-                </Text>
-              </Pressable>
-            ))}
-          </View>
+          <TimeSelector
+            presets={[
+              { value: 2, label: "2 min" },
+              { value: 5, label: "5 min" },
+              { value: 10, label: "10 min" },
+              { value: 30, label: "30 min" },
+              { value: 45, label: "45 min" },
+              { value: 60, label: "1 hour" },
+              { value: 90, label: "1.5 hours" },
+              { value: 120, label: "2 hours" },
+            ]}
+            value={duration}
+            onChange={setDuration}
+            isCustom={isCustomDuration}
+            onCustomToggle={setIsCustomDuration}
+            unit="minutes"
+            min={1}
+            max={120}
+            step={1}
+          />
         </View>
 
         {/* Posture */}

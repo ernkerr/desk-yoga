@@ -3,11 +3,15 @@ import { View, Text, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter } from "expo-router";
 import { BackButton } from "@/src/components/BackButton";
+import { TimeSelector } from "@/src/components/TimeSelector";
+import { Button, ButtonText } from "@/src/components/ui/button";
 
 export default function SessionSetupScreen() {
   const router = useRouter();
   const [step, setStep] = useState<"posture" | "duration">("posture");
   const [posture, setPosture] = useState<"sitting" | "standing">();
+  const [duration, setDuration] = useState(5);
+  const [isCustomDuration, setIsCustomDuration] = useState(false);
 
   const handleBack = () => {
     if (step === "duration") {
@@ -22,12 +26,12 @@ export default function SessionSetupScreen() {
     setStep("duration");
   };
 
-  const handleDuration = (minutes: number) => {
+  const handleStart = () => {
     router.push({
       pathname: "/session",
       params: {
         posture,
-        duration: minutes,
+        duration,
         mode: "just stretch",
         speed: "slow",
       },
@@ -61,34 +65,47 @@ export default function SessionSetupScreen() {
         )}
 
         {step === "duration" && (
-          <View className="flex-row flex-wrap gap-4 justify-center">
-            <Pressable
-              onPress={() => handleDuration(2)}
-              className="w-[45%] py-12 rounded-xl border-2 border-gray-200"
-            >
-              <Text className="text-xl font-semibold text-center">2 min</Text>
-            </Pressable>
-            <Pressable
-              onPress={() => handleDuration(5)}
-              className="w-[45%] py-12 rounded-xl border-2 border-gray-200"
-            >
-              <Text className="text-xl font-semibold text-center">5 min</Text>
-            </Pressable>
-            <Pressable
-              onPress={() => handleDuration(10)}
-              className="w-[45%] py-12 rounded-xl border-2 border-gray-200"
-            >
-              <Text className="text-xl font-semibold text-center">10 min</Text>
-            </Pressable>
-            <Pressable
-              onPress={() => handleDuration(30)}
-              className="w-[45%] py-12 rounded-xl border-2 border-gray-200"
-            >
-              <Text className="text-xl font-semibold text-center">30 min</Text>
-            </Pressable>
+          <View className="w-full px-4">
+            <Text className="text-xl font-semibold text-center mb-6">
+              How long?
+            </Text>
+            <TimeSelector
+              presets={[
+                { value: 2, label: "2 min" },
+                { value: 5, label: "5 min" },
+                { value: 10, label: "10 min" },
+                { value: 30, label: "30 min" },
+                { value: 45, label: "45 min" },
+                { value: 60, label: "1 hour" },
+                { value: 90, label: "1.5 hours" },
+                { value: 120, label: "2 hours" },
+              ]}
+              value={duration}
+              onChange={setDuration}
+              isCustom={isCustomDuration}
+              onCustomToggle={setIsCustomDuration}
+              unit="minutes"
+              min={1}
+              max={120}
+              step={1}
+            />
           </View>
         )}
       </View>
+
+      {step === "duration" && (
+        <View className="px-6 pb-6">
+          <Button
+            size="xl"
+            action="primary"
+            onPress={handleStart}
+            className="w-full"
+            style={{ boxShadow: "4px 4px 0px #000" }}
+          >
+            <ButtonText>Start</ButtonText>
+          </Button>
+        </View>
+      )}
     </SafeAreaView>
   );
 }

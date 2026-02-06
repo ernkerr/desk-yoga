@@ -9,7 +9,7 @@ type PoseCardProps = {
 
 export function PoseCard({ pose }: PoseCardProps) {
   return (
-    <View className="w-full justify-center items-center bg-orange-300/90 px-4">
+    <View className="w-full justify-center items-center  px-4">
       {/* Pose Image */}
       <Image
         source={pose.image}

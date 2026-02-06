@@ -1,4 +1,4 @@
-import { View, Text, Pressable, TextInput } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import type { SessionConfig } from "@/src/types/session";
 
 type SpeedToggleProps = {
@@ -21,12 +21,22 @@ const speedOptions: {
 export function SpeedToggle({
   speed,
   onSpeedChange,
-  customDuration = 40,
+  customDuration = 90,
   onCustomDurationChange,
 }: SpeedToggleProps) {
+  const increment = () => {
+    const newValue = Math.min((customDuration || 90) + 5, 300);
+    onCustomDurationChange?.(newValue);
+  };
+
+  const decrement = () => {
+    const newValue = Math.max((customDuration || 90) - 5, 10);
+    onCustomDurationChange?.(newValue);
+  };
+
   return (
     <View className="w-full">
-      <View className="flex-row flex-wrap gap-2 mb-3">
+      <View className="flex-row flex-wrap gap-2 mb-2">
         {speedOptions.map((option) => (
           <Pressable
             key={option.value}
@@ -79,20 +89,23 @@ export function SpeedToggle({
       </View>
 
       {speed === "custom" && (
-        <View className="flex-row items-center justify-center gap-3 mt-2">
-          <Text className="text-gray-600">Seconds per pose:</Text>
-          <TextInput
-            value={String(customDuration)}
-            onChangeText={(text) => {
-              const num = parseInt(text, 10);
-              if (!isNaN(num) && num > 0 && onCustomDurationChange) {
-                onCustomDurationChange(num);
-              }
-            }}
-            keyboardType="number-pad"
-            className="border-2 border-gray-300 rounded-lg px-3 py-2 w-20 text-center font-semibold"
-            maxLength={3}
-          />
+        <View className="flex-row items-center justify-center gap-4 mt-3 py-2">
+          <Pressable
+            onPress={decrement}
+            className="w-12 h-12 rounded-full border-2 border-gray-300 items-center justify-center bg-white"
+          >
+            <Text className="text-2xl font-bold text-gray-600">-</Text>
+          </Pressable>
+          <View className="min-w-[100px] items-center">
+            <Text className="text-3xl font-bold">{customDuration}</Text>
+            <Text className="text-gray-500 text-sm">seconds</Text>
+          </View>
+          <Pressable
+            onPress={increment}
+            className="w-12 h-12 rounded-full border-2 border-gray-300 items-center justify-center bg-white"
+          >
+            <Text className="text-2xl font-bold text-gray-600">+</Text>
+          </Pressable>
         </View>
       )}
     </View>
