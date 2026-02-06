@@ -52,9 +52,7 @@ export default function Session() {
   const [currentPose, setCurrentPose] = useState<Pose | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [resetTrigger, setResetTrigger] = useState(0);
-  const [redoClickCount, setRedoClickCount] = useState(0);
   const glowRef = useRef<PoseTransitionGlowRef>(null);
-  const redoTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const poseCardOpacity = useSharedValue(1);
 
   const poseCardStyle = useAnimatedStyle(() => ({
@@ -111,27 +109,17 @@ export default function Session() {
     resetTrigger,
   );
 
-  const handleRedo = () => {
-    if (redoClickCount === 0) {
-      // First click: reset pose timer
-      setResetTrigger((t) => t + 1);
-      setRedoClickCount(1);
-      redoTimeoutRef.current = setTimeout(() => setRedoClickCount(0), 2000);
-    } else {
-      // Second click: go back one pose
-      if (redoTimeoutRef.current) clearTimeout(redoTimeoutRef.current);
-      setRedoClickCount(0);
-      const history = getHistory();
-      if (history.length >= 2) {
-        popFromHistory(); // remove current
-        const prevId = popFromHistory(); // get previous
-        if (prevId) {
-          const prevPose = getPoseById(prevId);
-          if (prevPose) {
-            setCurrentPose(prevPose);
-            addToHistory(prevId); // re-add to history
-            setResetTrigger((t) => t + 1); // reset timer
-          }
+  const handleBack = () => {
+    const history = getHistory();
+    if (history.length >= 2) {
+      popFromHistory(); // remove current
+      const prevId = popFromHistory(); // get previous
+      if (prevId) {
+        const prevPose = getPoseById(prevId);
+        if (prevPose) {
+          setCurrentPose(prevPose);
+          addToHistory(prevId); // re-add to history
+          setResetTrigger((t) => t + 1); // reset timer for new pose
         }
       }
     }
@@ -180,10 +168,10 @@ export default function Session() {
       {/* Bottom control bar */}
       <View className="absolute bottom-20 left-0 right-0 flex-row justify-between px-6 z-10">
         <Pressable
-          onPress={handleRedo}
+          onPress={handleBack}
           className="w-14 h-14 items-center justify-center"
         >
-          <Ionicons name="refresh" size={32} color="#333" />
+          <Ionicons name="play-forward" size={32} color="#333" style={{ transform: [{ scaleX: -1 }] }} />
         </Pressable>
         <Pressable
           onPress={() => setIsPaused(!isPaused)}
@@ -208,6 +196,7 @@ export default function Session() {
 
       <PoseTransitionGlow
         ref={glowRef}
+        isPaused={isPaused}
         onFadeOutStart={handleFadeOutStart}
         onPoseChange={handlePoseChange}
       />

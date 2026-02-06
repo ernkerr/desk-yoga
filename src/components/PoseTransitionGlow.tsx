@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useCallback } from "react";
+import React, { forwardRef, useImperativeHandle, useCallback, useRef, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, {
@@ -9,6 +9,7 @@ import Animated, {
   withDelay,
   Easing,
   runOnJS,
+  cancelAnimation,
 } from "react-native-reanimated";
 
 // Warm muted orange from tertiary palette (tertiary-300)
@@ -22,6 +23,7 @@ export interface PoseTransitionGlowRef {
 }
 
 export interface PoseTransitionGlowProps {
+  isPaused?: boolean;
   onFadeOutStart?: () => void;
   onPoseChange?: () => void;
   onComplete?: () => void;
@@ -30,9 +32,24 @@ export interface PoseTransitionGlowProps {
 export const PoseTransitionGlow = forwardRef<
   PoseTransitionGlowRef,
   PoseTransitionGlowProps
->(function PoseTransitionGlow({ onFadeOutStart, onPoseChange, onComplete }, ref) {
+>(function PoseTransitionGlow({ isPaused, onFadeOutStart, onPoseChange, onComplete }, ref) {
   const opacity = useSharedValue(0);
   const fullScreenOpacity = useSharedValue(0);
+  const fadeOutTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cancel animations and clear timeouts when paused
+  useEffect(() => {
+    if (isPaused) {
+      cancelAnimation(opacity);
+      cancelAnimation(fullScreenOpacity);
+      opacity.value = 0;
+      fullScreenOpacity.value = 0;
+      if (fadeOutTimeoutRef.current) {
+        clearTimeout(fadeOutTimeoutRef.current);
+        fadeOutTimeoutRef.current = null;
+      }
+    }
+  }, [isPaused]);
 
   const handleFadeOutStart = useCallback(() => {
     onFadeOutStart?.();
@@ -116,7 +133,7 @@ export const PoseTransitionGlow = forwardRef<
       fadeInDuration;
 
     // Trigger pose card fade out when full screen starts
-    setTimeout(() => {
+    fadeOutTimeoutRef.current = setTimeout(() => {
       handleFadeOutStart();
     }, pulse3PeakTime);
 
