@@ -188,7 +188,76 @@ export const Poses: Pose[] = [
       focus_areas: [],
     },
   },
-
+  {
+    id: "seated-frame-right",
+    name: "Seated Frame",
+    image: require("@/assets/images/poses/seated/seated_frame.png"),
+    instructions: "Sit tall. ",
+    side: "right",
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: [],
+    },
+  },
+  {
+    id: "seated-frame-left",
+    name: "Seated Frame",
+    image: require("@/assets/images/poses/seated/seated_frame.png"),
+    instructions: "Sit tall. ",
+    side: "left",
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: [],
+    },
+  },
+  {
+    id: "side-neck-stretch-right",
+    name: "Side Neck Stretch",
+    image: require("@/assets/images/poses/seated/side_neck_stretch_R.png"),
+    instructions: "Sit tall. ",
+    side: "right",
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: [],
+    },
+  },
+  {
+    id: "side-neck-stretch-left",
+    name: "Side Neck Stretch",
+    image: require("@/assets/images/poses/seated/side_neck_stretch_L.png"),
+    instructions: "Sit tall. ",
+    side: "left",
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: [],
+    },
+  },
+  {
+    id: "shoulder-roll",
+    name: "Shoulder Roll",
+    image: require("@/assets/images/poses/seated/shoulder_roll.png"),
+    instructions: "Sit tall. ",
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: [],
+    },
+  },
+  {
+    id: "chin-to-chest",
+    name: "Chin To Chest",
+    image: require("@/assets/images/poses/seated/chin_to_chest.png"),
+    instructions: "Sit tall. ",
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: [],
+    },
+  },
   // {
   //   id: "seated-wrist-stretch",
   //   name: "Seated Wrist Stretch",
@@ -369,6 +438,96 @@ export const Poses: Pose[] = [
       focus_areas: [],
     },
   },
+  {
+    id: "high-lunge-right",
+    name: "High Lunge",
+    image: require("@/assets/images/poses/standing/high_lunge_R.png"),
+    instructions: "Stand tall ",
+    side: "right",
+    tags: {
+      allowed_posture: "standing",
+      visibility: "camera on",
+      focus_areas: [],
+    },
+  },
+  {
+    id: "high-lunge-left",
+    name: "High Lunge",
+    image: require("@/assets/images/poses/standing/high_lunge_L.png"),
+    instructions: "Stand tall ",
+    side: "left",
+    tags: {
+      allowed_posture: "standing",
+      visibility: "camera on",
+      focus_areas: [],
+    },
+  },
+  {
+    id: "frame-right",
+    name: "Frame",
+    image: require("@/assets/images/poses/standing/frame.png"),
+    instructions:
+      "Stand tall Place each elbow into the opposite palm above your head. Imagine that you are pulling your arms apart, even as you hold them together.",
+    side: "right",
+    tags: {
+      allowed_posture: "standing",
+      visibility: "camera off",
+      focus_areas: [],
+    },
+  },
+  //  You can grasp your forearms if it is more comfortable.
+  {
+    id: "frame-left",
+    name: "Frame",
+    image: require("@/assets/images/poses/standing/frame_L.png"),
+    instructions:
+      "Stand tall Place each elbow into the opposite palm above your head. Imagine that you are pulling your arms apart, even as you hold them together. ",
+    side: "left",
+    tags: {
+      allowed_posture: "standing",
+      visibility: "camera off",
+      focus_areas: [],
+    },
+  },
+  {
+    id: "chair",
+    name: "Chair",
+    image: require("@/assets/images/poses/standing/chair.png"),
+    instructions:
+      "Stand with your feet hip-distance apart. Bend your knees and reach your seat back as if you were about to sit in a chair.",
+    tags: {
+      allowed_posture: "standing",
+      visibility: "camera off",
+      focus_areas: [],
+    },
+  },
+  {
+    id: "supported-chair",
+    name: "Supported Chair",
+    image: require("@/assets/images/poses/standing/supported_chair.png"),
+    instructions:
+      "Stand with your feet hip-distance apart and rest your fingertips on your desk. Lift your heels so you’re standing on the balls of your feet. Bend your knees and reach your seat back as if you were about to sit in a chair while keeping your heels lifted. Lengthen your back.",
+    tags: {
+      allowed_posture: "standing",
+      visibility: "camera on",
+      focus_areas: [],
+    },
+  },
+  {
+    id: "forward_bend",
+    name: "Forward Bend",
+    image: require("@/assets/images/poses/standing/forward_bend.png"),
+    instructions:
+      "Stand with your feet hip-distance apart and hinge forward from your hips. Keep your knees slightly bent. Relax your neck and shoulders and send your sitting bones high.",
+    tags: {
+      allowed_posture: "standing",
+      visibility: "camera on",
+      focus_areas: [],
+    },
+  },
+
+  //
+
   // {
   //   id: "triangle-right",
   //   name: "Triangle",
