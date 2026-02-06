@@ -4,29 +4,52 @@ import { useEffect, useRef } from "react";
  * Hook that tracks session duration and calls onEnd when time is up.
  * @param durationMinutes - Session duration in minutes
  * @param onEnd - Callback when session duration is reached
+ * @param isPaused - Whether the timer is paused
  */
 export function useSessionDuration(
   durationMinutes: number,
-  onEnd: () => void
+  onEnd: () => void,
+  isPaused?: boolean
 ) {
-  const startTimeRef = useRef<number>(Date.now());
+  const remainingMsRef = useRef<number>(durationMinutes * 60 * 1000);
+  const lastTickRef = useRef<number>(Date.now());
   const endedRef = useRef(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Reset when duration changes
+  useEffect(() => {
+    remainingMsRef.current = durationMinutes * 60 * 1000;
+    lastTickRef.current = Date.now();
+    endedRef.current = false;
+  }, [durationMinutes]);
 
   useEffect(() => {
-    startTimeRef.current = Date.now();
-    endedRef.current = false;
+    if (endedRef.current) return;
 
-    const durationMs = durationMinutes * 60 * 1000;
+    if (isPaused) {
+      // Pause: save remaining time and clear timer
+      const elapsed = Date.now() - lastTickRef.current;
+      remainingMsRef.current = Math.max(0, remainingMsRef.current - elapsed);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+      return;
+    }
 
-    const timer = setTimeout(() => {
+    // Resume: start timer for remaining time
+    lastTickRef.current = Date.now();
+    timerRef.current = setTimeout(() => {
       if (!endedRef.current) {
         endedRef.current = true;
         onEnd();
       }
-    }, durationMs);
+    }, remainingMsRef.current);
 
     return () => {
-      clearTimeout(timer);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
     };
-  }, [durationMinutes, onEnd]);
+  }, [isPaused, onEnd]);
 }

@@ -8,6 +8,7 @@ export function useTimer(
   speed: SessionConfig["speed"],
   onNext: () => void,
   customDuration?: number,
+  isPaused?: boolean,
 ) {
   const getDuration = () => {
     if (speed === "custom") {
@@ -25,6 +26,8 @@ export function useTimer(
 
   // Countdown
   useEffect(() => {
+    if (isPaused) return;
+
     const duration = getDuration();
     const id = setInterval(() => {
       setSeconds((s) => {
@@ -36,7 +39,7 @@ export function useTimer(
       });
     }, 1000);
     return () => clearInterval(id);
-  }, [speed, customDuration, onNext]);
+  }, [speed, customDuration, onNext, isPaused]);
 
   return seconds;
 }

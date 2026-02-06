@@ -67,21 +67,21 @@ export function TimeSelector({
 
   return (
     <View className="w-full">
-      <View className="flex-row flex-wrap gap-3">
+      <View className="flex-row flex-wrap gap-2 mb-2">
         {presets.map((preset) => {
           const isSelected = !isCustom && value === preset.value;
           return (
             <Pressable
               key={preset.value}
               onPress={() => handlePresetPress(preset)}
-              className={`min-w-[30%] flex-1 py-5 rounded-xl border-2 ${
+              className={`flex-1 min-w-[70px] py-3 rounded-lg border-2 ${
                 isSelected
                   ? "bg-black border-black"
                   : "bg-white border-gray-200"
               }`}
             >
               <Text
-                className={`text-lg font-semibold text-center ${
+                className={`font-semibold text-center ${
                   isSelected ? "text-white" : "text-gray-700"
                 }`}
               >
@@ -92,12 +92,12 @@ export function TimeSelector({
         })}
         <Pressable
           onPress={handleCustomPress}
-          className={`min-w-[30%] flex-1 py-5 rounded-xl border-2 ${
+          className={`flex-1 min-w-[70px] py-3 rounded-lg border-2 ${
             isCustom ? "bg-black border-black" : "bg-white border-gray-200"
           }`}
         >
           <Text
-            className={`text-lg font-semibold text-center ${
+            className={`font-semibold text-center ${
               isCustom ? "text-white" : "text-gray-700"
             }`}
           >
@@ -106,29 +106,26 @@ export function TimeSelector({
         </Pressable>
       </View>
 
-      {/* Stepper - always takes up space to prevent layout shift */}
-      <View
-        className="flex-row items-center justify-center gap-4 mt-4 py-3"
-        style={{ opacity: isCustom ? 1 : 0 }}
-        pointerEvents={isCustom ? "auto" : "none"}
-      >
-        <Pressable
-          onPress={decrement}
-          className="w-14 h-14 rounded-full border-2 border-gray-300 items-center justify-center bg-white"
-        >
-          <Text className="text-3xl font-bold text-gray-600">-</Text>
-        </Pressable>
-        <View className="min-w-[140px] items-center">
-          <Text className="text-2xl font-bold text-center">{displayValue}</Text>
-          {showUnit && <Text className="text-gray-500">{unit}</Text>}
+      {isCustom && (
+        <View className="flex-row items-center justify-center gap-4 mt-3 py-2">
+          <Pressable
+            onPress={decrement}
+            className="w-12 h-12 rounded-full border-2 border-gray-300 items-center justify-center bg-white"
+          >
+            <Text className="text-2xl font-bold text-gray-600">-</Text>
+          </Pressable>
+          <View className="min-w-[100px] items-center">
+            <Text className="text-3xl font-bold text-center">{displayValue}</Text>
+            {showUnit && <Text className="text-gray-500 text-sm">{unit}</Text>}
+          </View>
+          <Pressable
+            onPress={increment}
+            className="w-12 h-12 rounded-full border-2 border-gray-300 items-center justify-center bg-white"
+          >
+            <Text className="text-2xl font-bold text-gray-600">+</Text>
+          </Pressable>
         </View>
-        <Pressable
-          onPress={increment}
-          className="w-14 h-14 rounded-full border-2 border-gray-300 items-center justify-center bg-white"
-        >
-          <Text className="text-3xl font-bold text-gray-600">+</Text>
-        </Pressable>
-      </View>
+      )}
     </View>
   );
 }

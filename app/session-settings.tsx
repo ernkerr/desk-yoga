@@ -5,7 +5,6 @@ import { Stack, useRouter, useLocalSearchParams } from "expo-router";
 import { BackButton } from "@/src/components/BackButton";
 import { SpeedToggle } from "@/src/components/SpeedToggle";
 import { TimeSelector } from "@/src/components/TimeSelector";
-import { Button, ButtonText } from "@/src/components/ui/button";
 import type { SessionConfig } from "@/src/types/session";
 import type {
   AllowedPosture,
@@ -66,7 +65,7 @@ export default function SessionSettings() {
         }}
       />
 
-      <BackButton />
+      <BackButton onPress={handleSave} />
 
       <ScrollView className="flex-1 px-6 pt-16">
         <Text className="text-2xl font-bold mb-6 text-center">
@@ -245,18 +244,6 @@ export default function SessionSettings() {
           </View>
         </View>
 
-        {/* Save Button */}
-        <View className="mt-4 mb-8">
-          <Button
-            size="lg"
-            action="primary"
-            onPress={handleSave}
-            className="w-full"
-            style={{ boxShadow: "4px 4px 0px #000" }}
-          >
-            <ButtonText>Save & Continue</ButtonText>
-          </Button>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );

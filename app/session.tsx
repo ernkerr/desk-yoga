@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Pressable } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter, useLocalSearchParams } from "expo-router";
 import { BackButton } from "@/src/components/BackButton";
@@ -34,6 +35,7 @@ export default function Session() {
   };
 
   const [currentPose, setCurrentPose] = useState<Pose | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
   const glowRef = useRef<PoseTransitionGlowRef>(null);
 
   // Get first pose on mount
@@ -57,7 +59,7 @@ export default function Session() {
   }, [config, currentPose?.id]);
 
   // Timer auto-advances poses
-  useTimer(config.speed, handleNext, config.poseDuration);
+  useTimer(config.speed, handleNext, config.poseDuration, isPaused);
 
   const handleEnd = useCallback(() => {
     clearHistory();
@@ -65,7 +67,7 @@ export default function Session() {
   }, [router]);
 
   // End session when duration is reached
-  useSessionDuration(config.duration, handleEnd);
+  useSessionDuration(config.duration, handleEnd, isPaused);
 
   const handleEndPress = () => {
     clearHistory();
@@ -108,6 +110,12 @@ export default function Session() {
 
       <View className="flex-1 justify-center items-center">
         <PoseCard pose={currentPose} />
+        <Pressable
+          onPress={() => setIsPaused(!isPaused)}
+          className="mt-4 w-14 h-14 rounded-full bg-black items-center justify-center"
+        >
+          <Ionicons name={isPaused ? "play" : "pause"} size={28} color="white" />
+        </Pressable>
       </View>
 
       <PoseTransitionGlow ref={glowRef} onComplete={handleGlowComplete} />

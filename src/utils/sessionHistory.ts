@@ -22,3 +22,7 @@ export function getHistory(): string[] {
 export function clearHistory(): void {
   shownPoseIds = [];
 }
+
+export function popFromHistory(): string | undefined {
+  return shownPoseIds.pop();
+}
