@@ -22,14 +22,25 @@ export interface PoseTransitionGlowRef {
 }
 
 export interface PoseTransitionGlowProps {
+  onFadeOutStart?: () => void;
+  onPoseChange?: () => void;
   onComplete?: () => void;
 }
 
 export const PoseTransitionGlow = forwardRef<
   PoseTransitionGlowRef,
   PoseTransitionGlowProps
->(function PoseTransitionGlow({ onComplete }, ref) {
+>(function PoseTransitionGlow({ onFadeOutStart, onPoseChange, onComplete }, ref) {
   const opacity = useSharedValue(0);
+  const fullScreenOpacity = useSharedValue(0);
+
+  const handleFadeOutStart = useCallback(() => {
+    onFadeOutStart?.();
+  }, [onFadeOutStart]);
+
+  const handlePoseChange = useCallback(() => {
+    onPoseChange?.();
+  }, [onPoseChange]);
 
   const handleComplete = useCallback(() => {
     onComplete?.();
@@ -40,7 +51,12 @@ export const PoseTransitionGlow = forwardRef<
     const fadeInDuration = 400;
     const fadeOutDuration = 400;
     const delayBetween = 200;
+    const fullScreenPeakOpacity = 0.95;
+    const fullScreenFadeInDuration = 300;
+    const fullScreenHoldDuration = 200;
+    const fullScreenFadeOutDuration = 400;
 
+    // Edge glow pulses
     opacity.value = withSequence(
       // Pulse 1
       withTiming(peakOpacity, {
@@ -63,7 +79,7 @@ export const PoseTransitionGlow = forwardRef<
         duration: fadeOutDuration,
         easing: Easing.in(Easing.ease),
       }),
-      // Pulse 3
+      // Pulse 3 - stays at peak while full screen fades in/out
       withDelay(
         delayBetween,
         withTiming(peakOpacity, {
@@ -71,20 +87,68 @@ export const PoseTransitionGlow = forwardRef<
           easing: Easing.out(Easing.ease),
         })
       ),
-      withTiming(
-        0,
-        {
-          duration: fadeOutDuration,
-          easing: Easing.in(Easing.ease),
-        },
-        (finished) => {
-          if (finished) {
-            runOnJS(handleComplete)();
+      // Hold at peak during full screen animation, then fade out together
+      withDelay(
+        fullScreenFadeInDuration + fullScreenHoldDuration,
+        withTiming(
+          0,
+          {
+            duration: fullScreenFadeOutDuration,
+            easing: Easing.in(Easing.ease),
+          },
+          (finished) => {
+            if (finished) {
+              runOnJS(handleComplete)();
+            }
           }
-        }
+        )
       )
     );
-  }, [handleComplete]);
+
+    // Calculate when pulse 3 reaches peak
+    const pulse3PeakTime =
+      fadeInDuration +
+      fadeOutDuration +
+      delayBetween +
+      fadeInDuration +
+      fadeOutDuration +
+      delayBetween +
+      fadeInDuration;
+
+    // Trigger pose card fade out when full screen starts
+    setTimeout(() => {
+      handleFadeOutStart();
+    }, pulse3PeakTime);
+
+    // Full screen fade: starts when pulse 3 peaks, fades in, holds, then out
+    fullScreenOpacity.value = withDelay(
+      pulse3PeakTime,
+      withSequence(
+        withTiming(fullScreenPeakOpacity, {
+          duration: fullScreenFadeInDuration,
+          easing: Easing.out(Easing.ease),
+        }),
+        // Hold at peak - pose changes here
+        withDelay(
+          0,
+          withTiming(
+            fullScreenPeakOpacity,
+            { duration: fullScreenHoldDuration },
+            (finished) => {
+              if (finished) {
+                runOnJS(handlePoseChange)();
+              }
+            }
+          )
+        ),
+        // Fade out
+        withTiming(0, {
+          duration: fullScreenFadeOutDuration,
+          easing: Easing.in(Easing.ease),
+        })
+      )
+    );
+  }, [handleComplete, handlePoseChange, handleFadeOutStart]);
 
   useImperativeHandle(ref, () => ({ trigger }), [trigger]);
 
@@ -92,8 +156,15 @@ export const PoseTransitionGlow = forwardRef<
     opacity: opacity.value,
   }));
 
+  const fullScreenAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: fullScreenOpacity.value,
+  }));
+
   return (
     <View style={styles.container} pointerEvents="none">
+      {/* Full screen orange overlay */}
+      <Animated.View style={[styles.fullScreen, fullScreenAnimatedStyle]} />
+
       {/* Top edge gradient */}
       <Animated.View style={[styles.topGradient, animatedStyle]}>
         <LinearGradient
@@ -141,6 +212,10 @@ const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
     zIndex: 1000,
+  },
+  fullScreen: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: GLOW_COLOR,
   },
   topGradient: {
     position: "absolute",

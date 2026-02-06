@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { View, Text, Pressable } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  Easing,
+} from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter, useLocalSearchParams } from "expo-router";
@@ -11,8 +17,17 @@ import {
 } from "@/src/components/PoseTransitionGlow";
 import { PoseCard } from "@/src/components/PoseCard";
 import { TiledBackground } from "@/src/components/TiledBackground";
-import { getNextPose, triggerNextPose, getPoseById } from "@/src/utils/poseEngine";
-import { addToHistory, clearHistory, getHistory, popFromHistory } from "@/src/utils/sessionHistory";
+import {
+  getNextPose,
+  triggerNextPose,
+  getPoseById,
+} from "@/src/utils/poseEngine";
+import {
+  addToHistory,
+  clearHistory,
+  getHistory,
+  popFromHistory,
+} from "@/src/utils/sessionHistory";
 import { useTimer } from "@/src/utils/timerEngine";
 import { useSessionDuration } from "@/src/utils/sessionDuration";
 import type { Pose } from "@/src/types/pose";
@@ -40,6 +55,11 @@ export default function Session() {
   const [redoClickCount, setRedoClickCount] = useState(0);
   const glowRef = useRef<PoseTransitionGlowRef>(null);
   const redoTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const poseCardOpacity = useSharedValue(1);
+
+  const poseCardStyle = useAnimatedStyle(() => ({
+    opacity: poseCardOpacity.value,
+  }));
 
   // Get first pose on mount
   useEffect(() => {
@@ -61,16 +81,35 @@ export default function Session() {
     glowRef.current?.trigger();
   }, []);
 
-  // Called when glow animation completes - advance to next pose
-  const handleGlowComplete = useCallback(() => {
+  // Called when orange starts fading in - fade out pose card
+  const handleFadeOutStart = useCallback(() => {
+    poseCardOpacity.value = withTiming(0, {
+      duration: 250,
+      easing: Easing.in(Easing.ease),
+    });
+  }, []);
+
+  // Called when full screen is at peak opacity - swap to next pose and fade in
+  const handlePoseChange = useCallback(() => {
     const hasNext = triggerNextPose(config, currentPose?.id, setCurrentPose);
     if (!hasNext) {
       handleEnd();
     }
+    // Fade in the new pose card
+    poseCardOpacity.value = withTiming(1, {
+      duration: 350,
+      easing: Easing.out(Easing.ease),
+    });
   }, [config, currentPose?.id, handleEnd]);
 
   // Timer auto-advances poses
-  useTimer(config.speed, handleNext, config.poseDuration, isPaused, resetTrigger);
+  useTimer(
+    config.speed,
+    handleNext,
+    config.poseDuration,
+    isPaused,
+    resetTrigger,
+  );
 
   const handleRedo = () => {
     if (redoClickCount === 0) {
@@ -118,11 +157,9 @@ export default function Session() {
 
   if (!currentPose) {
     return (
-      <TiledBackground>
-        <SafeAreaView className="flex-1 bg-transparent items-center justify-center">
-          <Text>No poses available for this configuration</Text>
-        </SafeAreaView>
-      </TiledBackground>
+      <SafeAreaView className="flex-1 bg-transparent items-center justify-center">
+        <Text>No poses available for this configuration</Text>
+      </SafeAreaView>
     );
   }
 
@@ -135,26 +172,45 @@ export default function Session() {
       <SessionSettingsButton onPress={handleSettingsPress} />
 
       <View className="flex-1 justify-center items-center">
-        <PoseCard pose={currentPose} />
+        <Animated.View style={poseCardStyle}>
+          <PoseCard pose={currentPose} />
+        </Animated.View>
       </View>
 
       {/* Bottom control bar */}
       <View className="absolute bottom-20 left-0 right-0 flex-row justify-between px-6 z-10">
-        <Pressable onPress={handleRedo} className="w-14 h-14 items-center justify-center">
+        <Pressable
+          onPress={handleRedo}
+          className="w-14 h-14 items-center justify-center"
+        >
           <Ionicons name="refresh" size={32} color="#333" />
         </Pressable>
-        <Pressable onPress={() => setIsPaused(!isPaused)} className="w-14 h-14 items-center justify-center">
+        <Pressable
+          onPress={() => setIsPaused(!isPaused)}
+          className="w-14 h-14 items-center justify-center"
+        >
           <Ionicons name={isPaused ? "play" : "pause"} size={32} color="#333" />
         </Pressable>
-        <Pressable onPress={() => {
-          const hasNext = triggerNextPose(config, currentPose?.id, setCurrentPose);
-          if (!hasNext) handleEnd();
-        }} className="w-14 h-14 items-center justify-center">
+        <Pressable
+          onPress={() => {
+            const hasNext = triggerNextPose(
+              config,
+              currentPose?.id,
+              setCurrentPose,
+            );
+            if (!hasNext) handleEnd();
+          }}
+          className="w-14 h-14 items-center justify-center"
+        >
           <Ionicons name="play-forward" size={32} color="#333" />
         </Pressable>
       </View>
 
-      <PoseTransitionGlow ref={glowRef} onComplete={handleGlowComplete} />
+      <PoseTransitionGlow
+        ref={glowRef}
+        onFadeOutStart={handleFadeOutStart}
+        onPoseChange={handlePoseChange}
+      />
     </SafeAreaView>
 
     // </TiledBackground>
