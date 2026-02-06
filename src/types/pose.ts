@@ -2,7 +2,14 @@ import type { ImageSourcePropType } from "react-native";
 
 export type AllowedPosture = "sitting" | "standing";
 export type CameraVisibility = "camera on" | "camera off";
-export type FocusArea = "wrist" | "neck" | "hips" | "back";
+export type FocusArea =
+  | "wrist"
+  | "neck"
+  | "hips"
+  | "back"
+  | "low back"
+  | "c"
+  | "glute";
 export type Side = "right" | "left";
 
 export type Pose = {

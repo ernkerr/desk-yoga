@@ -258,32 +258,33 @@ export const Poses: Pose[] = [
       focus_areas: [],
     },
   },
-  // {
-  //   id: "seated-figure-four-twist-right",
-  //   name: "Seated Wrist Stretch",
-  //   image: require("@/assets/images/poses/seated/seated_figure_four_twist_R.png"),
-  //   instructions:
-  //     "Extend one arm forward, palm up. Cross your ankle over the opposite knee Switch sides.",
-  //   side: "right"
-  // tags: {
-  //     allowed_posture: "sitting",
-  //     visibility: "camera off",
-  //     focus_areas: ["hips", "back"],
-  //   },
-  // },
+  {
+    id: "seated-figure-four-twist-right",
+    name: "Seated Figure Four Twist",
+    image: require("@/assets/images/poses/seated/seated_figure_four_twist_R.png"),
+    instructions:
+      "Sit tall. Cross your ankle over the opposite knee. Start your rotation from your lower belly. Then the ribs and finally the neck.",
+    side: "right"
+  tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: ["hips", "back", "glute"],
+    },
+  },
   // To protect your knee while the leg is up, keep your top foot flexed (pull your toes back toward your shin). This engages the muscles around the knee and keeps the joint stable while you're stretching the hip.
-  // {
-  //   id: "seated-wrist-stretch",
-  //   name: "Seated Wrist Stretch",
-  //   image: require("@/assets/images/poses/seated/seated_wrist_stretch.png"),
-  //   instructions:
-  //     "Extend one arm forward, palm up. Use your other hand to gently pull fingers down and back. Switch sides.",
-  //   tags: {
-  //     allowed_posture: "sitting",
-  //     visibility: "camera off",
-  //     focus_areas: [],
-  //   },
-  // },
+  {
+    id: "seated-figure-four-twist-left",
+    name: "Seated Figure Four Twist",
+    image: require("@/assets/images/poses/seated/seated_figure_four_twist_L.png"),
+    instructions:
+      "Sit tall. Cross your ankle over the opposite knee. Start your rotation from your lower belly. Then the ribs and finally the neck.",
+    side: "left"
+  tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: ["hips", "back", "glute"],
+    },
+  },
 
   // standing poses
   {
