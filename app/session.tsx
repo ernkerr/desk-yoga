@@ -3,6 +3,8 @@ import { View, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter, useLocalSearchParams } from "expo-router";
 import { BackButton } from "@/src/components/BackButton";
+import { SkipButton } from "@/src/components/SkipButton";
+import { SessionSettingsButton } from "@/src/components/SessionSettingsButton";
 import {
   PoseTransitionGlow,
   PoseTransitionGlowRef,
@@ -71,6 +73,13 @@ export default function Session() {
     router.back();
   };
 
+  const handleSettingsPress = () => {
+    router.push({
+      pathname: "/session-settings",
+      params: config,
+    });
+  };
+
   if (!currentPose) {
     return (
       <TiledBackground>
@@ -87,6 +96,8 @@ export default function Session() {
       <Stack.Screen options={{ headerShown: false }} />
 
       <BackButton onPress={handleEndPress} />
+      <SessionSettingsButton onPress={handleSettingsPress} />
+      <SkipButton onPress={() => triggerNextPose(config, currentPose?.id, setCurrentPose)} />
 
       {/* Speed Toggle - top right */}
       {/* <View className="absolute top-16 right-6 z-10">
