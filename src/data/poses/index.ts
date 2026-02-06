@@ -259,6 +259,20 @@ export const Poses: Pose[] = [
     },
   },
   // {
+  //   id: "seated-figure-four-twist-right",
+  //   name: "Seated Wrist Stretch",
+  //   image: require("@/assets/images/poses/seated/seated_figure_four_twist_R.png"),
+  //   instructions:
+  //     "Extend one arm forward, palm up. Cross your ankle over the opposite knee Switch sides.",
+  //   side: "right"
+  // tags: {
+  //     allowed_posture: "sitting",
+  //     visibility: "camera off",
+  //     focus_areas: ["hips", "back"],
+  //   },
+  // },
+  // To protect your knee while the leg is up, keep your top foot flexed (pull your toes back toward your shin). This engages the muscles around the knee and keeps the joint stable while you're stretching the hip.
+  // {
   //   id: "seated-wrist-stretch",
   //   name: "Seated Wrist Stretch",
   //   image: require("@/assets/images/poses/seated/seated_wrist_stretch.png"),

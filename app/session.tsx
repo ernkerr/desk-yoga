@@ -71,7 +71,7 @@ export default function Session() {
 
   const handleEnd = useCallback(() => {
     clearHistory();
-    router.back();
+    router.replace("/session-complete");
   }, [router]);
 
   // Handle next pose (called by timer) - triggers glow first
