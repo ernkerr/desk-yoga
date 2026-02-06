@@ -335,7 +335,7 @@ export const Poses: Pose[] = [
     },
   },
   {
-    id: "tree-right",
+    id: "tree-1-right",
     name: "Tree",
     image: require("@/assets/images/poses/standing/tree_1_R.png"),
     instructions:
@@ -348,7 +348,7 @@ export const Poses: Pose[] = [
     },
   },
   {
-    id: "tree-left",
+    id: "tree-1-left",
     name: "Tree ",
     image: require("@/assets/images/poses/standing/tree_1_L.png"),
     instructions:
@@ -361,7 +361,7 @@ export const Poses: Pose[] = [
     },
   },
   {
-    id: "tree-right",
+    id: "tree-2-right",
     name: "Tree",
     image: require("@/assets/images/poses/standing/tree_2_R.png"),
     instructions:
@@ -374,7 +374,7 @@ export const Poses: Pose[] = [
     },
   },
   {
-    id: "tree-left",
+    id: "tree-2-left",
     name: "Tree",
     image: require("@/assets/images/poses/standing/tree_2_L.png"),
     instructions:
