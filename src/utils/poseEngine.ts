@@ -1,6 +1,7 @@
 import type { Pose } from "../types/pose";
 import type { SessionConfig } from "../types/session";
 import { Poses } from "../data/poses";
+import { PRESETS } from "../types/presets";
 import { getHistory, addToHistory } from "./sessionHistory";
 
 /**
@@ -16,7 +17,7 @@ export function getPoseById(id: string): Pose | undefined {
 export function filterPoses(config: SessionConfig): Pose[] {
   return Poses.filter((pose) => {
     if (pose.tags.allowed_posture !== config.posture) return false;
-    if (config.focus_area && pose.tags.focus_areas !== config.focus_area) return false;
+    if (config.focus_area && !pose.tags.focus_areas.includes(config.focus_area)) return false;
     if (config.camera && pose.tags.visibility !== config.camera) return false;
     return true;
   });
@@ -37,6 +38,18 @@ export function getPairedPose(pose: Pose): Pose | null {
  */
 export function getNextPose(config: SessionConfig, currentPoseId?: string): Pose | null {
   const history = getHistory();
+
+  // If preset has a sequence, use it
+  if (config.presetId) {
+    const preset = PRESETS.find((p) => p.id === config.presetId);
+    if (preset?.poseSequence && preset.poseSequence.length > 0) {
+      const nextIndex = history.length;
+      if (nextIndex < preset.poseSequence.length) {
+        return getPoseById(preset.poseSequence[nextIndex]) || null;
+      }
+      return null; // Sequence exhausted - end session
+    }
+  }
 
   // If current pose has a pair, show that next
   if (currentPoseId) {
@@ -62,15 +75,18 @@ export function getNextPose(config: SessionConfig, currentPoseId?: string): Pose
 
 /**
  * Get next pose and update state via callback
+ * Returns true if a pose was found, false if sequence is complete
  */
 export function triggerNextPose(
   config: SessionConfig,
   currentPoseId: string | undefined,
   setPose: (pose: Pose) => void
-) {
+): boolean {
   const next = getNextPose(config, currentPoseId);
   if (next) {
     setPose(next);
     addToHistory(next.id);
+    return true;
   }
+  return false;
 }

@@ -8,4 +8,5 @@ export type SessionConfig = {
   speed: "still" | "slow" | "flow" | "custom";
   poseDuration?: number; // seconds per pose (used when speed is "custom")
   duration: number;
+  presetId?: string; // ID of the preset used to start this session
 };

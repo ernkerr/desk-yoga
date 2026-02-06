@@ -10,6 +10,7 @@ export type Preset = {
   description: string;
   image: ImageSourcePropType | null;
   config: SessionConfig;
+  poseSequence?: string[]; // Optional ordered list of pose IDs
 };
 
 /**
@@ -25,10 +26,11 @@ export const PRESETS: Preset[] = [
       mode: "just stretch",
       posture: "sitting",
       camera: "camera off",
-      focus_area: "neck",
+
       speed: "slow",
       duration: 5,
     },
+    poseSequence: ["seated-upward-salute"],
   },
   {
     id: "midday-slump",
@@ -39,7 +41,7 @@ export const PRESETS: Preset[] = [
       mode: "just stretch",
       posture: "sitting",
       camera: "camera off",
-      focus_area: "neck",
+      // focus_area: "neck",
       speed: "slow",
       duration: 5,
     },
@@ -54,7 +56,7 @@ export const PRESETS: Preset[] = [
       mode: "just stretch",
       posture: "sitting",
       camera: "camera off",
-      focus_area: "neck",
+      // focus_area: "neck",
       speed: "slow",
       duration: 5,
     },
@@ -68,7 +70,7 @@ export const PRESETS: Preset[] = [
       mode: "just stretch",
       posture: "sitting",
       camera: "camera off",
-      focus_area: "neck",
+      // focus_area: "neck",
       speed: "slow",
       duration: 5,
     },
@@ -82,7 +84,7 @@ export const PRESETS: Preset[] = [
       mode: "just stretch",
       posture: "sitting",
       camera: "camera off",
-      focus_area: "neck",
+      // focus_area: "neck",
       speed: "slow",
       duration: 5,
     },
@@ -96,7 +98,7 @@ export const PRESETS: Preset[] = [
       mode: "just stretch",
       posture: "sitting",
       camera: "camera off",
-      focus_area: "wrist",
+      // focus_area: "wrist",
       speed: "slow",
       duration: 5,
     },
@@ -104,13 +106,13 @@ export const PRESETS: Preset[] = [
   {
     id: "pick-me-up",
     name: "Pick-Me-Up",
-    description: "Time for you",
+    description: "Schedule some time for you",
     image: require("@/assets/images/presets/midday_slump_4.png"),
     config: {
       mode: "just stretch",
       posture: "sitting",
       camera: "camera off",
-      focus_area: "neck",
+      // focus_area: "neck",
       speed: "slow",
       duration: 5,
     },
@@ -124,7 +126,7 @@ export const PRESETS: Preset[] = [
       mode: "just stretch",
       posture: "sitting",
       camera: "camera off",
-      focus_area: "neck",
+      // focus_area: "neck",
       speed: "slow",
       duration: 5,
     },

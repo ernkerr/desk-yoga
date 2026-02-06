@@ -31,6 +31,7 @@ export default function Session() {
     speed: (params.speed as SessionConfig["speed"]) || "slow",
     poseDuration: params.poseDuration ? Number(params.poseDuration) : undefined,
     duration: Number(params.duration) || 5,
+    presetId: params.presetId as string | undefined,
   };
 
   const [currentPose, setCurrentPose] = useState<Pose | null>(null);
@@ -50,6 +51,11 @@ export default function Session() {
     }
   }, []);
 
+  const handleEnd = useCallback(() => {
+    clearHistory();
+    router.back();
+  }, [router]);
+
   // Handle next pose (called by timer) - triggers glow first
   const handleNext = useCallback(() => {
     glowRef.current?.trigger();
@@ -57,8 +63,11 @@ export default function Session() {
 
   // Called when glow animation completes - advance to next pose
   const handleGlowComplete = useCallback(() => {
-    triggerNextPose(config, currentPose?.id, setCurrentPose);
-  }, [config, currentPose?.id]);
+    const hasNext = triggerNextPose(config, currentPose?.id, setCurrentPose);
+    if (!hasNext) {
+      handleEnd();
+    }
+  }, [config, currentPose?.id, handleEnd]);
 
   // Timer auto-advances poses
   useTimer(config.speed, handleNext, config.poseDuration, isPaused, resetTrigger);
@@ -88,11 +97,6 @@ export default function Session() {
       }
     }
   };
-
-  const handleEnd = useCallback(() => {
-    clearHistory();
-    router.back();
-  }, [router]);
 
   // End session when duration is reached
   useSessionDuration(config.duration, handleEnd, isPaused);
@@ -142,7 +146,10 @@ export default function Session() {
         <Pressable onPress={() => setIsPaused(!isPaused)} className="w-14 h-14 items-center justify-center">
           <Ionicons name={isPaused ? "play" : "pause"} size={32} color="#333" />
         </Pressable>
-        <Pressable onPress={() => triggerNextPose(config, currentPose?.id, setCurrentPose)} className="w-14 h-14 items-center justify-center">
+        <Pressable onPress={() => {
+          const hasNext = triggerNextPose(config, currentPose?.id, setCurrentPose);
+          if (!hasNext) handleEnd();
+        }} className="w-14 h-14 items-center justify-center">
           <Ionicons name="play-forward" size={32} color="#333" />
         </Pressable>
       </View>

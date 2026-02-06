@@ -61,7 +61,10 @@ export default function HomeScreen() {
               onPress={() => {
                 router.push({
                   pathname: "/session",
-                  params: preset.config,
+                  params: {
+                    ...preset.config,
+                    presetId: preset.id,
+                  },
                 });
               }}
             >
