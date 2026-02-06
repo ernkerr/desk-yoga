@@ -264,8 +264,8 @@ export const Poses: Pose[] = [
     image: require("@/assets/images/poses/seated/seated_figure_four_twist_R.png"),
     instructions:
       "Sit tall. Cross your ankle over the opposite knee. Start your rotation from your lower belly. Then the ribs and finally the neck.",
-    side: "right"
-  tags: {
+    side: "right",
+    tags: {
       allowed_posture: "sitting",
       visibility: "camera off",
       focus_areas: ["hips", "back", "glute"],
@@ -278,13 +278,131 @@ export const Poses: Pose[] = [
     image: require("@/assets/images/poses/seated/seated_figure_four_twist_L.png"),
     instructions:
       "Sit tall. Cross your ankle over the opposite knee. Start your rotation from your lower belly. Then the ribs and finally the neck.",
-    side: "left"
-  tags: {
+    side: "left",
+    tags: {
       allowed_posture: "sitting",
       visibility: "camera off",
       focus_areas: ["hips", "back", "glute"],
     },
   },
+
+  {
+    id: "seated-knee-to-chest",
+    name: "Seated Knee To Chest",
+    image: require("@/assets/images/poses/seated/seated_knee_to_chest_R.png"),
+    instructions:
+      "Sit tall. Interlace your fingers around your right shin and pull one knee toward your chest. Draw your shoulder blades down and back. Keep your gaze forward.",
+    side: "right",
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: ["low back", "hips"],
+    },
+  },
+  {
+    id: "seated-knee-to-chest",
+    name: "Seated Knee To Chest",
+    image: require("@/assets/images/poses/seated/seated_knee_to_chest_L.png"),
+    instructions:
+      "Sit tall. Interlace your fingers around your left shin and pull one knee toward your chest. Draw your shoulder blades down and back. Keep your gaze forward.",
+    side: "left",
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: ["low back", "hips"],
+    },
+  },
+  {
+    id: "seated-chest-opener",
+    name: "Seated Chest Opener",
+    image: require("@/assets/images/poses/seated/seated_chest_opener_L.png"),
+    instructions:
+      "Sit tall. Extend your left arm behind you and grip the backrest or the frame of the chair. Gently pull your chest forward and upward. Draw your shoulder blades together. Keep your gaze forward.",
+    side: "left",
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: ["chest", "shoulders", "back"],
+    },
+  },
+  {
+    id: "seated-chest-opener",
+    name: "Seated Chest Opener",
+    image: require("@/assets/images/poses/seated/seated_chest_opener_R.png"),
+    instructions:
+      "Sit tall. Extend your right arm behind you and grip the backrest or the frame of the chair. Gently pull your chest forward and upward. Draw your shoulder blades together. Keep your gaze forward.",
+    side: "right",
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: ["chest", "shoulders", "back"],
+    },
+  },
+  // {
+  //   id: "seated-knee-to-chest",
+  //   name: "Seated Knee To Chest",
+  //   image: require("@/assets/images/poses/seated/seated_knee_to_chest_L.png"),
+  //   instructions:
+  //     "Sit tall. Interlace your fingers around your left shin and pull one knee toward your chest. Draw your shoulder blades down and back. Keep your gaze forward.",
+  //   side: "left",
+  //   tags: {
+  //     allowed_posture: "sitting",
+  //     visibility: "camera off",
+  //     focus_areas: ["low back", "hips"],
+  //   },
+  // },
+  // {
+  //   id: "seated-knee-to-chest",
+  //   name: "Seated Knee To Chest",
+  //   image: require("@/assets/images/poses/seated/seated_knee_to_chest_L.png"),
+  //   instructions:
+  //     "Sit tall. Interlace your fingers around your left shin and pull one knee toward your chest. Draw your shoulder blades down and back. Keep your gaze forward.",
+  //   side: "left",
+  //   tags: {
+  //     allowed_posture: "sitting",
+  //     visibility: "camera off",
+  //     focus_areas: ["low back", "hips"],
+  //   },
+  // },
+
+  // {
+  //   id: "seated-wrist-stretch",
+  //   name: "Seated Wrist Stretch",
+  //   image: require("@/assets/images/poses/seated/seated_wrist_stretch.png"),
+  //   instructions:
+  //     "Extend one arm forward, palm up. Use your other hand to gently pull fingers down and back. Switch sides.",
+  //   tags: {
+  //     allowed_posture: "sitting",
+  //     visibility: "camera off",
+  //     focus_areas: [],
+  //   },
+  // },
+
+  // {
+  //   id: "seated-wrist-stretch",
+  //   name: "Seated Wrist Stretch",
+  //   image: require("@/assets/images/poses/seated/seated_wrist_stretch.png"),
+  //   instructions:
+  //     "Extend one arm forward, palm up. Use your other hand to gently pull fingers down and back. Switch sides.",
+  //   tags: {
+  //     allowed_posture: "sitting",
+  //     visibility: "camera off",
+  //     focus_areas: [],
+  //   },
+  // },
+
+  // {
+  //   id: "seated-wrist-stretch",
+  //   name: "Seated Wrist Stretch",
+  //   image: require("@/assets/images/poses/seated/seated_wrist_stretch.png"),
+  //   instructions:
+  //     "Extend one arm forward, palm up. Use your other hand to gently pull fingers down and back. Switch sides.",
+  //   tags: {
+  //     allowed_posture: "sitting",
+  //     visibility: "camera off",
+  //     focus_areas: [],
+  //   },
+  // },
 
   // standing poses
   {

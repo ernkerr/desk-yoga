@@ -8,7 +8,8 @@ export type FocusArea =
   | "hips"
   | "back"
   | "low back"
-  | "c"
+  | "chest"
+  | "shoulders"
   | "glute";
 export type Side = "right" | "left";
 
