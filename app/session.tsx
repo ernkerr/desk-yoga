@@ -33,7 +33,7 @@ import {
   playTransitionSound,
   unloadTransitionSound,
 } from "@/src/utils/audio";
-import { useTimer } from "@/src/utils/timerEngine";
+import { usePoseTimer } from "@/src/utils/poseTimer";
 import { useSessionDuration } from "@/src/utils/sessionDuration";
 import type { Pose } from "@/src/types/pose";
 import type { SessionConfig } from "@/src/types/session";
@@ -54,9 +54,10 @@ export default function Session() {
     presetId: params.presetId as string | undefined,
   };
 
+  // --- State ---
   const [currentPose, setCurrentPose] = useState<Pose | null>(null);
   const [isPaused, setIsPaused] = useState(false);
-  const [resetTrigger, setResetTrigger] = useState(0);
+  const [resetTrigger, setResetTrigger] = useState(0); // incremented to reset pose timer (e.g. going back)
   const glowRef = useRef<PoseTransitionGlowRef>(null);
   const poseCardOpacity = useSharedValue(1);
 
@@ -64,7 +65,9 @@ export default function Session() {
     opacity: poseCardOpacity.value,
   }));
 
-  // Get first pose on mount
+  // --- Initialization ---
+
+  // Pick the first pose and clear any leftover history
   useEffect(() => {
     clearHistory();
     const firstPose = getNextPose(config);
@@ -82,17 +85,20 @@ export default function Session() {
     };
   }, []);
 
+  // --- Session end ---
+  // Called when session duration expires OR when the pose sequence is exhausted
   const handleEnd = useCallback(() => {
     clearHistory();
     router.replace("/session-complete");
   }, [router]);
 
-  // Handle next pose (called by timer) - triggers glow first
+  // --- Pose transitions ---
+  // Step 1: Pose timer fires → trigger the glow overlay animation
   const handleNext = useCallback(() => {
     glowRef.current?.trigger();
   }, []);
 
-  // Called when orange starts fading in - fade out pose card
+  // Step 2: Glow starts fading in → fade out the current pose card
   const handleFadeOutStart = useCallback(() => {
     poseCardOpacity.value = withTiming(0, {
       duration: 250,
@@ -100,7 +106,7 @@ export default function Session() {
     });
   }, []);
 
-  // Called when full screen is at peak opacity - swap to next pose and fade in
+  // Step 3: Glow at peak → swap to the next pose and fade in the new card
   const handlePoseChange = useCallback(() => {
     // Play transition sound if enabled
     playTransitionSound();
@@ -116,8 +122,9 @@ export default function Session() {
     });
   }, [config, currentPose?.id, handleEnd]);
 
-  // Timer auto-advances poses
-  useTimer(
+  // --- Timers (run independently) ---
+  // Pose timer: counts down per pose, calls handleNext when it reaches zero
+  usePoseTimer(
     config.speed,
     handleNext,
     config.poseDuration,
@@ -125,6 +132,8 @@ export default function Session() {
     resetTrigger,
   );
 
+  // --- Controls ---
+  // Go back to the previous pose and reset the pose timer
   const handleBack = () => {
     const history = getHistory();
     if (history.length >= 2) {
@@ -141,7 +150,7 @@ export default function Session() {
     }
   };
 
-  // End session when duration is reached
+  // Session timer: ends the entire session when the configured duration expires
   useSessionDuration(config.duration, handleEnd, isPaused);
 
   const handleEndPress = () => {

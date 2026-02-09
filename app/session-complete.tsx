@@ -3,6 +3,8 @@ import { View, Text, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter } from "expo-router";
 
+// Shown when a session ends — either the session duration expired
+// or the preset pose sequence was exhausted.
 export default function SessionComplete() {
   const router = useRouter();
 
