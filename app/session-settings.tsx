@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Pressable, ScrollView } from "react-native";
+import {
+  getTransitionSoundEnabled,
+  setTransitionSoundEnabled,
+} from "@/src/utils/storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter, useLocalSearchParams } from "expo-router";
 import { BackButton } from "@/src/components/BackButton";
@@ -38,6 +42,18 @@ export default function SessionSettings() {
   const [isCustomDuration, setIsCustomDuration] = useState<boolean>(
     ![2, 5, 10, 30, 45, 60, 90, 120].includes(Number(params.duration) || 5),
   );
+  const [soundEnabled, setSoundEnabled] = useState(false);
+
+  // Load sound setting on mount
+  useEffect(() => {
+    setSoundEnabled(getTransitionSoundEnabled());
+  }, []);
+
+  // Handler for toggling sound
+  function handleSoundToggle(value: boolean) {
+    setSoundEnabled(value);
+    setTransitionSoundEnabled(value);
+  }
 
   const handleSave = () => {
     router.replace({
@@ -241,6 +257,45 @@ export default function SessionSettings() {
                 </Text>
               </Pressable>
             ))}
+          </View>
+        </View>
+
+        {/* Transition Sound */}
+        <View className="mb-6">
+          <Text className="text-lg font-semibold mb-3">Transition Sound</Text>
+          <View className="flex-row gap-2">
+            <Pressable
+              onPress={() => handleSoundToggle(false)}
+              className={`flex-1 py-3 rounded-lg border-2 ${
+                !soundEnabled
+                  ? "bg-black border-black"
+                  : "bg-white border-gray-200"
+              }`}
+            >
+              <Text
+                className={`font-semibold text-center ${
+                  !soundEnabled ? "text-white" : "text-gray-700"
+                }`}
+              >
+                Off
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => handleSoundToggle(true)}
+              className={`flex-1 py-3 rounded-lg border-2 ${
+                soundEnabled
+                  ? "bg-black border-black"
+                  : "bg-white border-gray-200"
+              }`}
+            >
+              <Text
+                className={`font-semibold text-center ${
+                  soundEnabled ? "text-white" : "text-gray-700"
+                }`}
+              >
+                On
+              </Text>
+            </Pressable>
           </View>
         </View>
 

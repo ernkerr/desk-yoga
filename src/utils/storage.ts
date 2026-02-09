@@ -11,6 +11,7 @@ export const storage = new MMKV();
 const STORAGE_KEYS = {
   hasPaid: "hasPaid",
   userName: "userName",
+  transitionSoundEnabled: "transitionSoundEnabled",
 } as const;
 
 // --- Payment ---
@@ -43,6 +44,23 @@ export function getUserName(): string {
  */
 export function setUserName(name: string): void {
   storage.set(STORAGE_KEYS.userName, name);
+}
+
+// --- Transition Sound ---
+
+/**
+ * Retrieves whether the transition sound is enabled.
+ * Returns false by default (off by default).
+ */
+export function getTransitionSoundEnabled(): boolean {
+  return storage.getBoolean(STORAGE_KEYS.transitionSoundEnabled) ?? false;
+}
+
+/**
+ * Sets whether the transition sound is enabled.
+ */
+export function setTransitionSoundEnabled(enabled: boolean): void {
+  storage.set(STORAGE_KEYS.transitionSoundEnabled, enabled);
 }
 
 // --- Utilities ---

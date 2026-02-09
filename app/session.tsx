@@ -28,6 +28,11 @@ import {
   getHistory,
   popFromHistory,
 } from "@/src/utils/sessionHistory";
+import {
+  preloadTransitionSound,
+  playTransitionSound,
+  unloadTransitionSound,
+} from "@/src/utils/audio";
 import { useTimer } from "@/src/utils/timerEngine";
 import { useSessionDuration } from "@/src/utils/sessionDuration";
 import type { Pose } from "@/src/types/pose";
@@ -69,6 +74,14 @@ export default function Session() {
     }
   }, []);
 
+  // Preload transition sound on mount, unload on unmount
+  useEffect(() => {
+    preloadTransitionSound();
+    return () => {
+      unloadTransitionSound();
+    };
+  }, []);
+
   const handleEnd = useCallback(() => {
     clearHistory();
     router.replace("/session-complete");
@@ -89,6 +102,9 @@ export default function Session() {
 
   // Called when full screen is at peak opacity - swap to next pose and fade in
   const handlePoseChange = useCallback(() => {
+    // Play transition sound if enabled
+    playTransitionSound();
+
     const hasNext = triggerNextPose(config, currentPose?.id, setCurrentPose);
     if (!hasNext) {
       handleEnd();
@@ -181,6 +197,7 @@ export default function Session() {
         </Pressable>
         <Pressable
           onPress={() => {
+            playTransitionSound();
             const hasNext = triggerNextPose(
               config,
               currentPose?.id,
