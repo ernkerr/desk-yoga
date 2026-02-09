@@ -44,6 +44,9 @@ export default function HomeScreen() {
             <Text className="text-2xl font-bold mb-2 text-center">
               {getGreeting()}, {getUserName()}
             </Text>
+            <Text className="text-base text-gray-600 text-center">
+              Ready to feel better?
+            </Text>
           </View>
 
           <Button
