@@ -31,6 +31,18 @@ function formatDuration(minutes: number): string {
   return `${hourPart} ${minPart}`;
 }
 
+function formatSeconds(seconds: number): string {
+  if (seconds < 60) {
+    return `${seconds}`;
+  }
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  if (secs === 0) {
+    return `${mins} min`;
+  }
+  return `${mins} min ${secs}s`;
+}
+
 export function TimeSelector({
   presets,
   value,
@@ -62,8 +74,13 @@ export function TimeSelector({
   };
 
   // Format display value for custom stepper
-  const displayValue = unit === "minutes" ? formatDuration(value) : `${value}`;
-  const showUnit = unit === "minutes" && value < 60;
+  const displayValue =
+    unit === "minutes" ? formatDuration(value) :
+    unit === "seconds" ? formatSeconds(value) :
+    `${value}`;
+  const showUnit =
+    (unit === "minutes" && value < 60) ||
+    (unit === "seconds" && value < 60);
 
   return (
     <View className="w-full">
