@@ -1,6 +1,7 @@
 import type { ImageSourcePropType } from "react-native";
 
 export type AllowedPosture = "sitting" | "standing";
+export type PosturePreference = AllowedPosture | "any";
 export type CameraVisibility = "camera on" | "camera off";
 export type FocusArea =
   | "wrist"

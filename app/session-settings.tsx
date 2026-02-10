@@ -9,7 +9,7 @@ import { Stack, useRouter, useLocalSearchParams } from "expo-router";
 import { BackButton } from "@/src/components/BackButton";
 import { TimeSelector } from "@/src/components/TimeSelector";
 import type {
-  AllowedPosture,
+  PosturePreference,
   CameraVisibility,
   FocusArea,
 } from "@/src/types/pose";
@@ -28,8 +28,8 @@ export default function SessionSettings() {
   const [duration, setDuration] = useState<number>(
     Number(params.duration) || 5,
   );
-  const [posture, setPosture] = useState<AllowedPosture>(
-    (params.posture as AllowedPosture) || "sitting",
+  const [posture, setPosture] = useState<PosturePreference>(
+    (params.posture as PosturePreference) || "sitting",
   );
   const [camera, setCamera] = useState<CameraVisibility | undefined>(
     params.camera as CameraVisibility | undefined,
@@ -167,6 +167,22 @@ export default function SessionSettings() {
                 }`}
               >
                 Standing
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => setPosture("any")}
+              className={`flex-1 py-3 rounded-lg border-2 ${
+                posture === "any"
+                  ? "bg-black border-black"
+                  : "bg-white border-gray-200"
+              }`}
+            >
+              <Text
+                className={`font-semibold text-center ${
+                  posture === "any" ? "text-white" : "text-gray-700"
+                }`}
+              >
+                Any
               </Text>
             </Pressable>
           </View>

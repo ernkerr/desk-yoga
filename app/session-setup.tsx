@@ -5,11 +5,12 @@ import { Stack, useRouter } from "expo-router";
 import { BackButton } from "@/src/components/BackButton";
 import { TimeSelector } from "@/src/components/TimeSelector";
 import { Button, ButtonText } from "@/src/components/ui/button";
+import type { PosturePreference } from "@/src/types/pose";
 
 export default function SessionSetupScreen() {
   const router = useRouter();
   const [step, setStep] = useState<"posture" | "duration">("posture");
-  const [posture, setPosture] = useState<"sitting" | "standing">();
+  const [posture, setPosture] = useState<PosturePreference>();
   const [duration, setDuration] = useState(5);
   const [isCustomDuration, setIsCustomDuration] = useState(false);
 
@@ -21,7 +22,7 @@ export default function SessionSetupScreen() {
     }
   };
 
-  const handlePosture = (selected: "sitting" | "standing") => {
+  const handlePosture = (selected: PosturePreference) => {
     setPosture(selected);
     setStep("duration");
   };
@@ -60,6 +61,12 @@ export default function SessionSetupScreen() {
               <Text className="text-xl font-semibold text-center">
                 Standing
               </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => handlePosture("any")}
+              className="flex-1 py-12 rounded-xl border-2 border-gray-200"
+            >
+              <Text className="text-xl font-semibold text-center">Any</Text>
             </Pressable>
           </View>
         )}

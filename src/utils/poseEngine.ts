@@ -16,7 +16,7 @@ export function getPoseById(id: string): Pose | undefined {
  */
 export function filterPoses(config: SessionConfig): Pose[] {
   return Poses.filter((pose) => {
-    if (pose.tags.allowed_posture !== config.posture) return false;
+    if (config.posture !== "any" && pose.tags.allowed_posture !== config.posture) return false;
     if (config.focus_area && !pose.tags.focus_areas.includes(config.focus_area)) return false;
     if (config.camera && pose.tags.visibility !== config.camera) return false;
     return true;

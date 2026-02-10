@@ -1,8 +1,8 @@
-import type { AllowedPosture, CameraVisibility, FocusArea } from "./pose";
+import type { PosturePreference, CameraVisibility, FocusArea } from "./pose";
 
 export type SessionConfig = {
   mode: "meeting" | "pomodoro" | "just stretch";
-  posture: AllowedPosture;
+  posture: PosturePreference;
   camera?: CameraVisibility;
   focus_area?: FocusArea;
   poseDuration: number; // seconds per pose
