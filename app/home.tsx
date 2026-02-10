@@ -29,11 +29,6 @@ export default function HomeScreen() {
       <Stack.Screen options={{ headerShown: false }} />
       <ScrollView className="flex-1" contentContainerStyle={{ flexGrow: 1 }}>
         <View className="flex-1 p-4">
-          <View className="flex-row justify-end mb-2">
-            <Pressable onPress={() => router.push("/settings")} className="p-2">
-              <Ionicons name="settings-outline" size={24} />
-            </Pressable>
-          </View>
           <View className="mb-4 items-center">
             <Text className="text-2xl font-bold mb-2 text-center">
               {getGreeting()}, {getUserName()}

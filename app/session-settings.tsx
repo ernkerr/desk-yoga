@@ -67,7 +67,7 @@ export default function SessionSettings() {
     });
   };
 
-  const focusAreas: FocusArea[] = ["wrist", "neck", "hips", "back"];
+  const focusAreas: FocusArea[] = ["wrists", "neck", "hips", "back"];
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -323,7 +323,6 @@ export default function SessionSettings() {
             ))}
           </View>
         </View>
-
       </ScrollView>
     </SafeAreaView>
   );
