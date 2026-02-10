@@ -4,14 +4,15 @@ export type AllowedPosture = "sitting" | "standing";
 export type PosturePreference = AllowedPosture | "any";
 export type CameraVisibility = "camera on" | "camera off";
 export type FocusArea =
-  | "wrist"
+  | "wrists"
+  | "forearms"
   | "neck"
   | "hips"
-  | "back"
+  | "glute"
   | "low back"
+  | "back"
   | "chest"
-  | "shoulders"
-  | "glute";
+  | "shoulders";
 export type Side = "right" | "left";
 
 export type Pose = {

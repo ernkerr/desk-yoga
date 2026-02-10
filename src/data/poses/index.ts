@@ -15,6 +15,18 @@ export const Poses: Pose[] = [
     },
   },
   {
+    id: "seated-prayer",
+    name: "Seated Prayer",
+    image: require("@/assets/images/poses/seated/seated_prayer_stretch.png"),
+    instructions:
+      "Sit tall. Inhale and Press palms together in front of your chest, fingers pointing up. Slowly lower your hands toward your waist until you feel a stretch in your inner wrists. ",
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: ["wrists", "forearms"],
+    },
+  },
+  {
     id: "seated-cat-cow",
     name: "Seated Cat Cow",
     image: require("@/assets/images/poses/seated/seated_cat_cow.png"),
@@ -62,6 +74,45 @@ export const Poses: Pose[] = [
       focus_areas: [],
     },
   },
+  {
+    id: "seated-stop-sign-L",
+    name: "Seated Stop Sign",
+    image: require("@/assets/images/poses/seated/seated_stop_sign_L.png"),
+    instructions:
+      'Extend one arm straight out with the palm facing away (like a "stop" sign). Use your other hand to gently pull your fingers back toward your body.',
+    side: "left",
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: ["wrists", "forearms"],
+    },
+  },
+  {
+    id: "seated-stop-sign-R",
+    name: "Seated Stop Sign",
+    image: require("@/assets/images/poses/seated/seated_stop_sign_R.png"),
+    instructions:
+      'Extend one arm straight out with the palm facing away (like a "stop" sign). Use your other hand to gently pull your fingers back toward your body.',
+    side: "right",
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: ["wrists", "forearms"],
+    },
+  },
+  // {
+  //   id: "seated-cow-face-right",
+  //   name: "Seated Cow Face",
+  //   image: require("@/assets/images/poses/seated/seated_cow_face_R.png"),
+  //   instructions:
+  //     "Sit tall. Reach your right arm up, bend the elbow, and bring your hand behind your back. Reach your left arm behind and clasp fingers if possible.",
+  //   side: "right",
+  //   tags: {
+  //     allowed_posture: "sitting",
+  //     visibility: "camera off",
+  //     focus_areas: [],
+  //   },
+  // },
   {
     id: "seated-cow-face-right",
     name: "Seated Cow Face",

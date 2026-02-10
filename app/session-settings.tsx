@@ -133,45 +133,6 @@ export default function SessionSettings() {
           />
         </View>
 
-        {/* Transition Sound */}
-        <View className="mb-6">
-          <Text className="text-lg font-semibold mb-3">Transition Sound</Text>
-          <View className="flex-row gap-2">
-            <Pressable
-              onPress={() => handleSoundToggle(true)}
-              className={`flex-1 py-3 rounded-lg border-2 ${
-                soundEnabled
-                  ? "bg-black border-black"
-                  : "bg-white border-gray-200"
-              }`}
-            >
-              <Text
-                className={`font-semibold text-center ${
-                  soundEnabled ? "text-white" : "text-gray-700"
-                }`}
-              >
-                On
-              </Text>
-            </Pressable>
-            <Pressable
-              onPress={() => handleSoundToggle(false)}
-              className={`flex-1 py-3 rounded-lg border-2 ${
-                !soundEnabled
-                  ? "bg-black border-black"
-                  : "bg-white border-gray-200"
-              }`}
-            >
-              <Text
-                className={`font-semibold text-center ${
-                  !soundEnabled ? "text-white" : "text-gray-700"
-                }`}
-              >
-                Off
-              </Text>
-            </Pressable>
-          </View>
-        </View>
-
         {/* Posture */}
         <View className="mb-6">
           <Text className="text-lg font-semibold mb-3">Posture</Text>
@@ -277,6 +238,45 @@ export default function SessionSettings() {
                 }`}
               >
                 Any
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+
+        {/* Transition Sound */}
+        <View className="mb-6">
+          <Text className="text-lg font-semibold mb-3">Transition Sound</Text>
+          <View className="flex-row gap-2">
+            <Pressable
+              onPress={() => handleSoundToggle(true)}
+              className={`flex-1 py-3 rounded-lg border-2 ${
+                soundEnabled
+                  ? "bg-black border-black"
+                  : "bg-white border-gray-200"
+              }`}
+            >
+              <Text
+                className={`font-semibold text-center ${
+                  soundEnabled ? "text-white" : "text-gray-700"
+                }`}
+              >
+                On
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => handleSoundToggle(false)}
+              className={`flex-1 py-3 rounded-lg border-2 ${
+                !soundEnabled
+                  ? "bg-black border-black"
+                  : "bg-white border-gray-200"
+              }`}
+            >
+              <Text
+                className={`font-semibold text-center ${
+                  !soundEnabled ? "text-white" : "text-gray-700"
+                }`}
+              >
+                Off
               </Text>
             </Pressable>
           </View>
