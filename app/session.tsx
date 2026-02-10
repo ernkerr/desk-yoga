@@ -10,7 +10,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter, useLocalSearchParams } from "expo-router";
 import { useIsFocused } from "@react-navigation/native";
-import { BackButton } from "@/src/components/BackButton";
 import { SessionSettingsButton } from "@/src/components/SessionSettingsButton";
 import {
   PoseTransitionGlow,
@@ -158,7 +157,7 @@ export default function Session() {
 
   const handleEndPress = () => {
     clearHistory();
-    router.back();
+    router.replace("/home");
   };
 
   const handleSettingsPress = () => {
@@ -180,7 +179,9 @@ export default function Session() {
     <SafeAreaView className="flex-1 bg-transparent">
       <Stack.Screen options={{ headerShown: false }} />
 
-      <BackButton onPress={handleEndPress} />
+      <Pressable onPress={handleEndPress} className="absolute top-20 left-6 z-10 w-14 h-14 items-center justify-center">
+        <Ionicons name="close" size={32} color="#333" />
+      </Pressable>
       <SessionSettingsButton onPress={handleSettingsPress} />
 
       <View className="flex-1 justify-center items-center">
