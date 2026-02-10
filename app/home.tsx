@@ -10,12 +10,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter } from "expo-router";
 import { Button, ButtonText } from "@ui/button";
 import { Ionicons } from "@expo/vector-icons";
-import { APP_CONFIG } from "@config/app.config";
 import { PRESETS } from "@/src/types/presets";
-import { getUserName } from "@/src/utils/storage";
+import { getUserName, getHasPaid } from "@/src/utils/storage";
 
 export default function HomeScreen() {
   const router = useRouter();
+  const isPaid = getHasPaid();
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -35,12 +35,6 @@ export default function HomeScreen() {
             </Pressable>
           </View>
           <View className="mb-4 items-center">
-            {/* <Text className="text-2xl font-bold mb-2 text-center">
-              {APP_CONFIG.displayName}
-            </Text> */}
-            {/* <Text className="text-base text-gray-600 text-center">
-              {APP_CONFIG.tagline}
-            </Text> */}
             <Text className="text-2xl font-bold mb-2 text-center">
               {getGreeting()}, {getUserName()}
             </Text>
@@ -62,6 +56,10 @@ export default function HomeScreen() {
             <Pressable
               key={preset.id}
               onPress={() => {
+                if (!isPaid) {
+                  router.push("/paywall");
+                  return;
+                }
                 router.push({
                   pathname: "/session",
                   params: {
@@ -84,6 +82,11 @@ export default function HomeScreen() {
                     <Text className="text-sm text-white/80">
                       {preset.description}
                     </Text>
+                    {!isPaid && (
+                      <View className="absolute top-3 right-3">
+                        <Ionicons name="lock-closed" size={18} color="white" />
+                      </View>
+                    )}
                   </View>
                 </ImageBackground>
               ) : (
@@ -92,6 +95,11 @@ export default function HomeScreen() {
                   <Text className="text-sm text-gray-500">
                     {preset.description}
                   </Text>
+                  {!isPaid && (
+                    <View className="absolute top-3 right-3">
+                      <Ionicons name="lock-closed" size={18} color="#999" />
+                    </View>
+                  )}
                 </View>
               )}
             </Pressable>

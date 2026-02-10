@@ -3,6 +3,8 @@ import type { SessionConfig } from "../types/session";
 import { Poses } from "../data/poses";
 import { PRESETS } from "../types/presets";
 import { getHistory, addToHistory } from "./sessionHistory";
+import { getHasPaid } from "./storage";
+import { FREE_TIER } from "../config/app.config";
 
 /**
  * Find a pose by ID
@@ -38,6 +40,13 @@ export function getPairedPose(pose: Pose): Pose | null {
  */
 export function getNextPose(config: SessionConfig, currentPoseId?: string): Pose | null {
   const history = getHistory();
+
+  // Free tier override: unpaid users always get the curated sequence
+  if (!getHasPaid()) {
+    const seq = FREE_TIER.poseSequence;
+    const nextIndex = history.length % seq.length;
+    return getPoseById(seq[nextIndex]) || null;
+  }
 
   // If preset has a sequence, use it
   if (config.presetId) {

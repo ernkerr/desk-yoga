@@ -22,13 +22,38 @@ export const APP_CONFIG = {
 } as const;
 
 export const IAP_CONFIG = {
-  // Product SKUs - must match App Store Connect / Google Play Console
-  products: {
+  // One-time (lifetime) purchase SKUs
+  lifetime: {
     ios: "deskyoga_premium_ios",
     android: "deskyoga_premium_android",
   },
+  // Subscription SKUs - must match App Store Connect / Google Play Console
+  subscriptions: {
+    weekly: {
+      ios: "deskyoga_weekly_ios",
+      android: "deskyoga_weekly_android",
+    },
+    monthly: {
+      ios: "deskyoga_monthly_ios",
+      android: "deskyoga_monthly_android",
+    },
+    yearly: {
+      ios: "deskyoga_yearly_ios",
+      android: "deskyoga_yearly_android",
+    },
+  },
   // Unlock codes (for promo access)
   promoCodes: ["GRATITUDE"],
+} as const;
+
+export const FREE_TIER = {
+  poseSequence: [
+    "seated-upward-salute",
+    "seated-cat-cow",
+    "seated-cow-cat",
+    "seated-crescent-moon",
+    "shoulder-roll",
+  ],
 } as const;
 
 export const FEATURES = {
@@ -53,11 +78,35 @@ export const STORAGE_KEYS = {
 
 // Helper functions
 
+export type SubscriptionPeriod = "weekly" | "monthly" | "yearly";
+
 /**
- * Get the IAP product ID for the current platform.
+ * Get the lifetime (one-time) purchase SKU for the current platform.
  */
-export function getIAPProductId(platform: "ios" | "android"): string {
-  return IAP_CONFIG.products[platform];
+export function getLifetimeSku(platform: "ios" | "android"): string {
+  return IAP_CONFIG.lifetime[platform];
+}
+
+/**
+ * Get a subscription SKU for the current platform.
+ */
+export function getSubscriptionSku(
+  platform: "ios" | "android",
+  period: SubscriptionPeriod,
+): string {
+  return IAP_CONFIG.subscriptions[period][platform];
+}
+
+/**
+ * Get all product SKUs (lifetime + subscriptions) for the current platform.
+ */
+export function getAllSkus(platform: "ios" | "android"): string[] {
+  return [
+    IAP_CONFIG.lifetime[platform],
+    IAP_CONFIG.subscriptions.weekly[platform],
+    IAP_CONFIG.subscriptions.monthly[platform],
+    IAP_CONFIG.subscriptions.yearly[platform],
+  ];
 }
 
 /**

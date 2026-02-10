@@ -6,16 +6,11 @@ import {
   type Purchase,
 } from "react-native-iap";
 import { setHasPaid } from "@/src/utils/storage";
-import { IAP_CONFIG } from "@config/app.config";
+import { getAllSkus } from "@config/app.config";
 import { Button, ButtonText } from "./ui/button";
 import { Spinner } from "./ui/Spinner";
 
-// Define the product ID based on platform
-// This matches the product ID configured in App Store Connect
-const sku = Platform.select({
-  ios: IAP_CONFIG.products.ios,
-  android: IAP_CONFIG.products.android,
-});
+const allSkus = getAllSkus(Platform.OS as "ios" | "android");
 
 export default function RestoreButton() {
   const [loading, setLoading] = useState(false);
@@ -27,9 +22,9 @@ export default function RestoreButton() {
       // This includes both consumable and non-consumable purchases
       const restoredPurchases: Purchase[] = await getAvailablePurchases();
 
-      // Find the specific premium purchase for this app
-      const validPurchase = restoredPurchases.find(
-        (purchase) => purchase.productId === sku,
+      // Find any valid purchase (lifetime or subscription) for this app
+      const validPurchase = restoredPurchases.find((purchase) =>
+        allSkus.includes(purchase.productId),
       );
 
       if (validPurchase) {
@@ -61,7 +56,6 @@ export default function RestoreButton() {
       size="lg"
       action="secondary"
       className="flex-1 mt-2"
-      style={{ boxShadow: "4px 4px 0px #000" }}
       disabled={loading}
     >
       {loading ? (
