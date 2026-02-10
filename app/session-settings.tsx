@@ -7,9 +7,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter, useLocalSearchParams } from "expo-router";
 import { BackButton } from "@/src/components/BackButton";
-import { SpeedToggle } from "@/src/components/SpeedToggle";
 import { TimeSelector } from "@/src/components/TimeSelector";
-import type { SessionConfig } from "@/src/types/session";
 import type {
   AllowedPosture,
   CameraVisibility,
@@ -21,11 +19,11 @@ export default function SessionSettings() {
   const params = useLocalSearchParams();
 
   // Initialize state from route params
-  const [speed, setSpeed] = useState<SessionConfig["speed"]>(
-    (params.speed as SessionConfig["speed"]) || "slow",
-  );
   const [poseDuration, setPoseDuration] = useState<number>(
-    Number(params.poseDuration) || 90,
+    Number(params.poseDuration) || 45,
+  );
+  const [isCustomPoseDuration, setIsCustomPoseDuration] = useState<boolean>(
+    ![15, 30, 45, 60, 120, 300].includes(Number(params.poseDuration) || 45),
   );
   const [duration, setDuration] = useState<number>(
     Number(params.duration) || 5,
@@ -63,7 +61,6 @@ export default function SessionSettings() {
         posture,
         camera,
         focus_area: focusArea,
-        speed,
         poseDuration,
         duration,
       },
@@ -88,14 +85,26 @@ export default function SessionSettings() {
           Session Settings
         </Text>
 
-        {/* Speed */}
+        {/* Time Per Pose */}
         <View className="mb-6">
-          <Text className="text-lg font-semibold mb-3">Speed</Text>
-          <SpeedToggle
-            speed={speed}
-            onSpeedChange={setSpeed}
-            customDuration={poseDuration}
-            onCustomDurationChange={setPoseDuration}
+          <Text className="text-lg font-semibold mb-3">Time Per Pose</Text>
+          <TimeSelector
+            presets={[
+              { value: 15, label: "15s" },
+              { value: 30, label: "30s" },
+              { value: 45, label: "45s" },
+              { value: 60, label: "1 min" },
+              { value: 120, label: "2 min" },
+              { value: 300, label: "5 min" },
+            ]}
+            value={poseDuration}
+            onChange={setPoseDuration}
+            isCustom={isCustomPoseDuration}
+            onCustomToggle={setIsCustomPoseDuration}
+            unit="seconds"
+            min={5}
+            max={600}
+            step={5}
           />
         </View>
 

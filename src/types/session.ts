@@ -5,8 +5,7 @@ export type SessionConfig = {
   posture: AllowedPosture;
   camera?: CameraVisibility;
   focus_area?: FocusArea;
-  speed: "still" | "slow" | "flow" | "custom";
-  poseDuration?: number; // seconds per pose (used when speed is "custom")
+  poseDuration: number; // seconds per pose
   duration: number;
   presetId?: string; // ID of the preset used to start this session
 };

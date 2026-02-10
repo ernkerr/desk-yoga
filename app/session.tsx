@@ -9,6 +9,7 @@ import Animated, {
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter, useLocalSearchParams } from "expo-router";
+import { useIsFocused } from "@react-navigation/native";
 import { BackButton } from "@/src/components/BackButton";
 import { SessionSettingsButton } from "@/src/components/SessionSettingsButton";
 import {
@@ -16,7 +17,6 @@ import {
   PoseTransitionGlowRef,
 } from "@/src/components/PoseTransitionGlow";
 import { PoseCard } from "@/src/components/PoseCard";
-import { TiledBackground } from "@/src/components/TiledBackground";
 import {
   getNextPose,
   triggerNextPose,
@@ -48,11 +48,17 @@ export default function Session() {
     posture: (params.posture as SessionConfig["posture"]) || "sitting",
     camera: params.camera as SessionConfig["camera"],
     focus_area: params.focus_area as SessionConfig["focus_area"],
-    speed: (params.speed as SessionConfig["speed"]) || "slow",
-    poseDuration: params.poseDuration ? Number(params.poseDuration) : undefined,
+    poseDuration: Number(params.poseDuration) || 45,
     duration: Number(params.duration) || 5,
     presetId: params.presetId as string | undefined,
   };
+
+  // Only navigate to session-complete if this screen is actively focused.
+  // In expo-router's Stack, background screens stay mounted — without this
+  // guard, the session timer can fire handleEnd while the user is on another screen.
+  const isFocused = useIsFocused();
+  const isFocusedRef = useRef(isFocused);
+  isFocusedRef.current = isFocused;
 
   // --- State ---
   const [currentPose, setCurrentPose] = useState<Pose | null>(null);
@@ -88,6 +94,7 @@ export default function Session() {
   // --- Session end ---
   // Called when session duration expires OR when the pose sequence is exhausted
   const handleEnd = useCallback(() => {
+    if (!isFocusedRef.current) return;
     clearHistory();
     router.replace("/session-complete");
   }, [router]);
@@ -111,23 +118,19 @@ export default function Session() {
     // Play transition sound if enabled
     playTransitionSound();
 
-    const hasNext = triggerNextPose(config, currentPose?.id, setCurrentPose);
-    if (!hasNext) {
-      handleEnd();
-    }
+    triggerNextPose(config, currentPose?.id, setCurrentPose);
     // Fade in the new pose card
     poseCardOpacity.value = withTiming(1, {
       duration: 350,
       easing: Easing.out(Easing.ease),
     });
-  }, [config, currentPose?.id, handleEnd]);
+  }, [config, currentPose?.id]);
 
   // --- Timers (run independently) ---
   // Pose timer: counts down per pose, calls handleNext when it reaches zero
   usePoseTimer(
-    config.speed,
-    handleNext,
     config.poseDuration,
+    handleNext,
     isPaused,
     resetTrigger,
   );
@@ -161,10 +164,7 @@ export default function Session() {
   const handleSettingsPress = () => {
     router.push({
       pathname: "/session-settings",
-      params: {
-        ...config,
-        poseDuration: config.poseDuration,
-      },
+      params: { ...config },
     });
   };
 
@@ -177,7 +177,6 @@ export default function Session() {
   }
 
   return (
-    // <TiledBackground>
     <SafeAreaView className="flex-1 bg-transparent">
       <Stack.Screen options={{ headerShown: false }} />
 
@@ -207,12 +206,11 @@ export default function Session() {
         <Pressable
           onPress={() => {
             playTransitionSound();
-            const hasNext = triggerNextPose(
+            triggerNextPose(
               config,
               currentPose?.id,
               setCurrentPose,
             );
-            if (!hasNext) handleEnd();
           }}
           className="w-14 h-14 items-center justify-center"
         >
@@ -227,7 +225,5 @@ export default function Session() {
         onPoseChange={handlePoseChange}
       />
     </SafeAreaView>
-
-    // </TiledBackground>
   );
 }

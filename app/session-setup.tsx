@@ -33,7 +33,7 @@ export default function SessionSetupScreen() {
         posture,
         duration,
         mode: "just stretch",
-        speed: "slow",
+        poseDuration: 45,
       },
     });
   };

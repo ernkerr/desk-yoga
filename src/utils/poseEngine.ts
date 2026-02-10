@@ -43,11 +43,9 @@ export function getNextPose(config: SessionConfig, currentPoseId?: string): Pose
   if (config.presetId) {
     const preset = PRESETS.find((p) => p.id === config.presetId);
     if (preset?.poseSequence && preset.poseSequence.length > 0) {
-      const nextIndex = history.length;
-      if (nextIndex < preset.poseSequence.length) {
-        return getPoseById(preset.poseSequence[nextIndex]) || null;
-      }
-      return null; // Sequence exhausted - end session
+      // Loop the sequence so session duration timer controls when to end
+      const nextIndex = history.length % preset.poseSequence.length;
+      return getPoseById(preset.poseSequence[nextIndex]) || null;
     }
   }
 
