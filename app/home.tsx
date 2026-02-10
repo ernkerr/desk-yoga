@@ -25,9 +25,9 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1" edges={["top", "left", "right"]}>
       <Stack.Screen options={{ headerShown: false }} />
-      <ScrollView className="flex-1">
+      <ScrollView className="flex-1" contentContainerStyle={{ flexGrow: 1 }}>
         <View className="flex-1 p-4">
           <View className="flex-row justify-end mb-2">
             <Pressable onPress={() => router.push("/settings")} className="p-2">
