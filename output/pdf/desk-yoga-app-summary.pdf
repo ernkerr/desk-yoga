@@ -1,0 +1,73 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+6 0 obj
+<< /Length 3553 >>
+stream
+q 1 1 1 rg 0 0 612 792 re f Q
+BT /F1 18.00 Tf 1 0 0 1 54.00 738.00 Tm (Desk Yoga - App Summary) Tj ET
+BT /F1 12.00 Tf 1 0 0 1 54.00 712.00 Tm (What it is) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 696.00 Tm (Desk Yoga is a React Native \(Expo\) app that guides short, desk-friendly yoga sessions with) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 684.00 Tm (illustrated poses and timed transitions. Users can start a custom flow or pick a preset;) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 672.00 Tm (premium unlocks full access via in-app purchases.) Tj ET
+BT /F1 12.00 Tf 1 0 0 1 54.00 654.00 Tm (Who it's for) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 638.00 Tm (People who sit at a desk for long stretches and want quick stretch breaks during the workday) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 626.00 Tm (\(including discreet sessions during meetings\).) Tj ET
+BT /F1 12.00 Tf 1 0 0 1 54.00 608.00 Tm (What it does) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 592.00 Tm (- Create a session by choosing posture \(sitting/standing/any\) and duration \(1-120 minutes\).) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 580.00 Tm (- Pick curated presets from the home screen; presets route to a paywall when not paid.) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 568.00 Tm (- Show each pose with an image, name, and step-by-step instructions \(supports left/right) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 68.00 556.00 Tm (variants\).) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 544.00 Tm (- Auto-advance poses on a per-pose timer; pause, skip, or go back at any time.) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 532.00 Tm (- Session settings: time per pose, focus area, camera visibility filter, and transition sound) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 68.00 520.00 Tm (toggle.) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 508.00 Tm (- In-app purchases: weekly/monthly/yearly/lifetime, restore purchase, and promo code) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 68.00 496.00 Tm (redemption.) Tj ET
+BT /F1 12.00 Tf 1 0 0 1 54.00 478.00 Tm (How it works \(repo-based\)) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 462.00 Tm (- Navigation/UI: Expo Router screens in app/*, styled with NativeWind + Gluestack UI; splash +) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 68.00 450.00 Tm (custom fonts.) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 438.00 Tm (- Content: static pose catalog in src/data/poses and preset definitions in src/types/presets.) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 426.00 Tm (- Session engine: src/utils/poseEngine selects the next pose from the catalog using session) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 68.00 414.00 Tm (config \(posture/focus/camera\) plus sessionHistory; unpaid users get a curated free-tier) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 68.00 402.00 Tm (sequence.) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 390.00 Tm (- Timing/animation: usePoseTimer triggers transitions; useSessionDuration ends the session;) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 68.00 378.00 Tm (Reanimated glow overlay drives the pose swap.) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 366.00 Tm (- State/services: MMKV \(src/utils/storage\) persists userName, hasPaid, and sound setting;) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 68.00 354.00 Tm (expo-av plays the chime.) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 342.00 Tm (- Backend/API: Not found in repo.) Tj ET
+BT /F1 12.00 Tf 1 0 0 1 54.00 324.00 Tm (How to run \(minimal\)) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 308.00 Tm (- npm install) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 296.00 Tm (- npm run start \(Expo dev server\)) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 284.00 Tm (- Run on iOS: npm run ios) Tj ET
+BT /F2 10.00 Tf 1 0 0 1 54.00 272.00 Tm (- Run on Android: npm run android) Tj ET
+
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000121 00000 n 
+0000000257 00000 n 
+0000000332 00000 n 
+0000000402 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+4007
+%%EOF
