@@ -11,7 +11,7 @@ export const Poses: Pose[] = [
     tags: {
       allowed_posture: "sitting",
       visibility: "camera off",
-      focus_areas: [],
+      focus_areas: ["back", "shoulders"],
     },
   },
   {
@@ -23,55 +23,57 @@ export const Poses: Pose[] = [
     tags: {
       allowed_posture: "sitting",
       visibility: "camera off",
-      focus_areas: ["wrists", "forearms"],
+      focus_areas: ["wrists", "forearms", "shoulders"],
     },
   },
   {
-    id: "seated-cat-cow",
-    name: "Seated Cat Cow",
+    id: "seated-cat",
+    name: "Seated Cat",
     image: require("@/assets/images/poses/seated/seated_cat_cow.png"),
     instructions:
       "Sit tall with hands on knees. Inhale, arch your back and look up. Exhale, round your spine and tuck your chin.",
     tags: {
       allowed_posture: "sitting",
       visibility: "camera off",
-      focus_areas: [],
+      focus_areas: ["back", "neck"],
     },
   },
   {
-    id: "seated-cow-cat",
-    name: "Seated Cow Cat",
+    id: "seated-cow",
+    name: "Seated Cow",
     image: require("@/assets/images/poses/seated/seated_cow_cat.png"),
     instructions:
       "Sit tall with hands on knees. Inhale, arch your back and look up. Exhale, round your spine and tuck your chin.",
     tags: {
       allowed_posture: "sitting",
       visibility: "camera off",
-      focus_areas: [],
+      focus_areas: ["chest", "shoulders"],
     },
   },
   {
     id: "seated-crescent-moon",
     name: "Seated Crescent Moon",
     image: require("@/assets/images/poses/seated/seated_crescent_moon_R.png"),
+    side: "right",
     instructions:
       "Sit tall. Inhale arms up. Exhale lean gently to the right side. Keep both sit bones grounded.",
     tags: {
       allowed_posture: "sitting",
       visibility: "camera off",
-      focus_areas: [],
+      focus_areas: ["back", "neck"],
     },
   },
   {
     id: "seated-crescent-moon",
     name: "Seated Crescent Moon",
     image: require("@/assets/images/poses/seated/seated_crescent_moon_L.png"),
+    side: "left",
     instructions:
       "Sit tall. Inhale arms up. Exhale lean gently to the left side. Keep both sit bones grounded.",
     tags: {
       allowed_posture: "sitting",
       visibility: "camera off",
-      focus_areas: [],
+      focus_areas: ["back", "neck"],
     },
   },
   {
@@ -79,7 +81,7 @@ export const Poses: Pose[] = [
     name: "Seated Stop Sign",
     image: require("@/assets/images/poses/seated/seated_stop_sign_L.png"),
     instructions:
-      'Extend one arm straight out with the palm facing away (like a "stop" sign). Use your other hand to gently pull your fingers back toward your body.',
+      "Sit tall. Extend left arm out with the palm facing away. Use right hand to gently pull your fingers back toward your body.",
     side: "left",
     tags: {
       allowed_posture: "sitting",
@@ -92,7 +94,7 @@ export const Poses: Pose[] = [
     name: "Seated Stop Sign",
     image: require("@/assets/images/poses/seated/seated_stop_sign_R.png"),
     instructions:
-      'Extend one arm straight out with the palm facing away (like a "stop" sign). Use your other hand to gently pull your fingers back toward your body.',
+      "Sit tall. Extend right arm out with the palm facing away. Use left hand to gently pull your fingers back toward your body.",
     side: "right",
     tags: {
       allowed_posture: "sitting",
@@ -126,6 +128,83 @@ export const Poses: Pose[] = [
       focus_areas: ["wrists", "forearms"],
     },
   },
+  {
+    id: "seated-finger-fan",
+    name: "Finger Fan",
+    image: require("@/assets/images/poses/seated/seated_finger_fan.png"),
+    instructions:
+      'Make a tight fist with both hands for 3 seconds. "Explode" your hands open, spreading your fingers as wide as possible. Repeat rapidly to stimulate blood flow.',
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: ["wrists", "forearms"],
+    },
+  },
+  {
+    id: "seated-wrist-circles",
+    name: "Wrist Circles",
+    image: require("@/assets/images/poses/seated/seated_wrist_circles.png"),
+    instructions:
+      "Hold your hands out in loose fists. Slowly rotate your wrists in large circles. Focus on a smooth, full range of motion.",
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera on",
+      focus_areas: ["wrists", "forearms"],
+    },
+  },
+  // these are switched NOT A TYPO
+  // TODO: rename them in repo
+  {
+    id: "seated-side-body-reach-right",
+    name: "Side Body Reach",
+    image: require("@/assets/images/poses/seated/seated_side_body_reach_L.png"),
+    instructions:
+      "Reach your right arm up and lean over to the left side. Hold onto the chair with your left hand for stability. Feel the stretch from your hip to your armpit.",
+    side: "right",
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: ["hips", "core", "shoulders"],
+    },
+  },
+  {
+    id: "seated-side-body-reach-left",
+    name: "Side Body Reach",
+    image: require("@/assets/images/poses/seated/seated_side_body_reach_R.png"),
+    instructions:
+      "Reach your left arm up and lean over to the right side. Hold onto the chair with your right hand for stability. Feel the stretch from your hip to your armpit.",
+    side: "left",
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: ["hips", "core", "shoulders"],
+    },
+  },
+  {
+    id: "cactus-arms",
+    name: "Cactus Arms",
+    image: require("@/assets/images/poses/seated/cactus_arms.png"),
+    instructions:
+      "Bend your elbows at 90 degrees like a cactus. Pull your elbows back. Squeeze your shoulder blades together.",
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: ["chest", "shoulders", "back"],
+    },
+  },
+  {
+    id: "neck-half-moon",
+    name: "Neck Half Moon",
+    image: require("@/assets/images/poses/seated/neck_half_moon_L.png"),
+    instructions:
+      "Gently drop your left ear to your left shoulder. Slowly roll your chin to your chest. Then your right ear to your right shoulder.",
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: ["neck", "back"],
+    },
+  },
+
   {
     id: "seated-cow-face-right",
     name: "Seated Cow Face",
@@ -198,7 +277,7 @@ export const Poses: Pose[] = [
     side: "right",
     tags: {
       allowed_posture: "sitting",
-      visibility: "camera off",
+      visibility: "camera on",
       focus_areas: [],
     },
   },
@@ -210,7 +289,7 @@ export const Poses: Pose[] = [
     side: "left",
     tags: {
       allowed_posture: "sitting",
-      visibility: "camera off",
+      visibility: "camera on",
       focus_areas: [],
     },
   },

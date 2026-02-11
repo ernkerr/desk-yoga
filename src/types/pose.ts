@@ -9,6 +9,7 @@ export type FocusArea =
   | "neck"
   | "hips"
   | "glute"
+  | "core"
   | "low back"
   | "back"
   | "chest"
