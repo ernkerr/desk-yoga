@@ -100,19 +100,32 @@ export const Poses: Pose[] = [
       focus_areas: ["wrists", "forearms"],
     },
   },
-  // {
-  //   id: "seated-cow-face-right",
-  //   name: "Seated Cow Face",
-  //   image: require("@/assets/images/poses/seated/seated_cow_face_R.png"),
-  //   instructions:
-  //     "Sit tall. Reach your right arm up, bend the elbow, and bring your hand behind your back. Reach your left arm behind and clasp fingers if possible.",
-  //   side: "right",
-  //   tags: {
-  //     allowed_posture: "sitting",
-  //     visibility: "camera off",
-  //     focus_areas: [],
-  //   },
-  // },
+  {
+    id: "floor-facing-right",
+    name: "Floor-Facing Stretch",
+    image: require("@/assets/images/poses/seated/seated_floor_facing_R.png"),
+    instructions:
+      "Extend right arm straight out. Point your fingers toward the floor, palm facing you. Use your left hand to push the back of your right hand back.",
+    side: "right",
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: ["wrists", "forearms"],
+    },
+  },
+  {
+    id: "floor-facing-left",
+    name: "Floor-Facing Stretch",
+    image: require("@/assets/images/poses/seated/seated_floor_facing_L.png"),
+    instructions:
+      "Extend left arm straight out. Point your fingers toward the floor, palm facing you. Use your right hand to push the back of your left hand back.",
+    side: "left",
+    tags: {
+      allowed_posture: "sitting",
+      visibility: "camera off",
+      focus_areas: ["wrists", "forearms"],
+    },
+  },
   {
     id: "seated-cow-face-right",
     name: "Seated Cow Face",
