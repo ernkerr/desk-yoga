@@ -8,6 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter, useLocalSearchParams } from "expo-router";
 import { BackButton } from "@/src/components/BackButton";
 import { TimeSelector } from "@/src/components/TimeSelector";
+import FeedbackButton from "@/src/components/FeedbackButton";
 import type {
   PosturePreference,
   CameraVisibility,
@@ -322,6 +323,10 @@ export default function SessionSettings() {
               </Pressable>
             ))}
           </View>
+        </View>
+
+        <View className="mt-10 mb-10">
+          <FeedbackButton />
         </View>
       </ScrollView>
     </SafeAreaView>

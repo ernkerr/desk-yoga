@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter } from "expo-router";
+import FeedbackButton from "@/src/components/FeedbackButton";
 
 // Shown when a session ends — either the session duration expired
 // or the preset pose sequence was exhausted.
@@ -19,6 +20,10 @@ export default function SessionComplete() {
         >
           <Text className="text-white text-lg font-semibold">OK</Text>
         </Pressable>
+
+        <View className="w-full mt-4">
+          <FeedbackButton />
+        </View>
       </View>
     </SafeAreaView>
   );

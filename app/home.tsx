@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { PRESETS } from "@/src/types/presets";
 import { APP_CONFIG } from "@/src/config/app.config";
 import { getUserName, getHasPaid } from "@/src/utils/storage";
+import FeedbackButton from "@/src/components/FeedbackButton";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -156,6 +157,10 @@ export default function HomeScreen() {
               </Pressable>
             );
           })}
+
+          <View className="mt-6 mb-10">
+            <FeedbackButton />
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
