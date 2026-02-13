@@ -19,6 +19,8 @@ export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Bold.ttf"),
     SpaceMonoRegular: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    Optima: require("../assets/fonts/Optima.ttf"),
+    OptimaBold: require("../assets/fonts/Optima_Bold.ttf"),
   });
 
   if (!fontsLoaded) {

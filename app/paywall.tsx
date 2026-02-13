@@ -208,13 +208,13 @@ export default function PaywallScreen() {
           <View className="p-6 z-10">
             <Text
               className="text-3xl font-bold text-white"
-              style={{ fontFamily: "SpaceMono" }}
+              style={{ fontFamily: "OptimaBold" }}
             >
               Unlock Full Access
             </Text>
             <Text
               className="text-base text-white/80 mt-1"
-              style={{ fontFamily: "SpaceMonoRegular" }}
+              style={{ fontFamily: "Optima" }}
             >
               Feel better while you work
             </Text>
@@ -233,7 +233,7 @@ export default function PaywallScreen() {
                 />
                 <Text
                   className="text-base ml-3 text-gray-800"
-                  style={{ fontFamily: "SpaceMonoRegular" }}
+                  style={{ fontFamily: "Optima" }}
                 >
                   {feature}
                 </Text>
@@ -262,7 +262,7 @@ export default function PaywallScreen() {
                         className={`text-base font-bold ${
                           isSelected ? "text-black" : "text-gray-600"
                         }`}
-                        style={{ fontFamily: "SpaceMono" }}
+                        style={{ fontFamily: "OptimaBold" }}
                       >
                         {option.label}
                       </Text>
@@ -270,7 +270,7 @@ export default function PaywallScreen() {
                         className={`text-xs mt-0.5 ${
                           isSelected ? "text-gray-600" : "text-gray-400"
                         }`}
-                        style={{ fontFamily: "SpaceMonoRegular" }}
+                        style={{ fontFamily: "Optima" }}
                       >
                         {option.sublabel}
                       </Text>
@@ -279,7 +279,7 @@ export default function PaywallScreen() {
                       className={`text-lg font-bold ${
                         isSelected ? "text-black" : "text-gray-500"
                       }`}
-                      style={{ fontFamily: "SpaceMono" }}
+                      style={{ fontFamily: "OptimaBold" }}
                     >
                       {product?.displayPrice || option.fallbackPrice}
                     </Text>
@@ -320,13 +320,13 @@ export default function PaywallScreen() {
                       value={code}
                       onChangeText={setCode}
                       autoCapitalize="characters"
-                      style={{ fontFamily: "SpaceMonoRegular" }}
+                      style={{ fontFamily: "Optima" }}
                     />
                   </Input>
                   {codeError ? (
                     <Text
                       className="text-red-500 mt-2"
-                      style={{ fontFamily: "SpaceMonoRegular" }}
+                      style={{ fontFamily: "Optima" }}
                     >
                       {codeError}
                     </Text>
@@ -343,7 +343,7 @@ export default function PaywallScreen() {
               ) : (
                 <Text
                   className="text-[#26ABFF] text-center underline"
-                  style={{ fontFamily: "SpaceMonoRegular" }}
+                  style={{ fontFamily: "Optima" }}
                   onPress={() => setShowCodeInput(true)}
                 >
                   Have a code?

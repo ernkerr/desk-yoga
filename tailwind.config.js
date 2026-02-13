@@ -18,10 +18,10 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Card"],
-        heading: ["Onder"],
-        body: ["Card"],
-        mono: ["Card"],
+        sans: ["Optima"],
+        heading: ["OptimaBold"],
+        body: ["Optima"],
+        mono: ["Optima"],
       },
       colors: {
         primary: {
@@ -180,9 +180,9 @@ module.exports = {
         },
       },
       fontFamily: {
-        heading: undefined,
-        body: undefined,
-        mono: undefined,
+        heading: ["OptimaBold"],
+        body: ["Optima"],
+        mono: ["Optima"],
         roboto: ["Roboto", "sans-serif"],
       },
       fontWeight: {
