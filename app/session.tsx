@@ -66,6 +66,7 @@ export default function Session() {
   const [resetTrigger, setResetTrigger] = useState(0); // incremented to reset pose timer (e.g. going back)
   const [remainingSeconds, setRemainingSeconds] = useState(config.duration * 60);
   const glowRef = useRef<PoseTransitionGlowRef>(null);
+  const sessionEndedRef = useRef(false);
   const poseCardOpacity = useSharedValue(1);
 
   const poseCardStyle = useAnimatedStyle(() => ({
@@ -95,7 +96,8 @@ export default function Session() {
   // --- Session end ---
   // Called when session duration expires OR when the pose sequence is exhausted
   const handleEnd = useCallback(() => {
-    if (!isFocusedRef.current) return;
+    if (!isFocusedRef.current || sessionEndedRef.current) return;
+    sessionEndedRef.current = true;
     clearHistory();
     router.replace("/session-complete");
   }, [router]);
@@ -121,6 +123,7 @@ export default function Session() {
 
     const hasNext = triggerNextPose(config, currentPose?.id, setCurrentPose);
     if (!hasNext && !getHasPaid()) {
+      sessionEndedRef.current = true;
       clearHistory();
       router.replace("/paywall");
       return;
@@ -234,6 +237,7 @@ export default function Session() {
               setCurrentPose,
             );
             if (!hasNext && !getHasPaid()) {
+              sessionEndedRef.current = true;
               clearHistory();
               router.replace("/paywall");
             }
