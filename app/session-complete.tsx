@@ -22,7 +22,7 @@ export default function SessionComplete() {
         </Pressable>
 
         <View className="w-full mt-4">
-          <FeedbackButton />
+          <FeedbackButton source="session-complete" />
         </View>
       </View>
     </SafeAreaView>

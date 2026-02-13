@@ -159,7 +159,7 @@ export default function HomeScreen() {
           })}
 
           <View className="mt-6 mb-10">
-            <FeedbackButton />
+            <FeedbackButton source="home" />
           </View>
         </View>
       </ScrollView>

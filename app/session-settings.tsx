@@ -326,7 +326,7 @@ export default function SessionSettings() {
         </View>
 
         <View className="mt-10 mb-10">
-          <FeedbackButton />
+          <FeedbackButton source="session-settings" />
         </View>
       </ScrollView>
     </SafeAreaView>
