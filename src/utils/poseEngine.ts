@@ -41,8 +41,9 @@ export function getPairedPose(pose: Pose): Pose | null {
 export function getNextPose(config: SessionConfig, currentPoseId?: string): Pose | null {
   const history = getHistory();
 
-  // Free tier override: unpaid users always get the curated sequence
-  if (!getHasPaid()) {
+  // Free tier override: unpaid users get the curated sequence
+  // (skipped when a focus area is selected so Quick Focus chips work)
+  if (!getHasPaid() && !config.focus_area) {
     const seq = FREE_TIER.poseSequence;
     const nextIndex = history.length % seq.length;
     return getPoseById(seq[nextIndex]) || null;

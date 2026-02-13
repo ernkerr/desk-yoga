@@ -12,9 +12,19 @@ import { Stack, useRouter } from "expo-router";
 import { Button, ButtonText } from "@ui/button";
 import { Ionicons } from "@expo/vector-icons";
 import { PRESETS } from "@/src/types/presets";
+import type { FocusArea } from "@/src/types/pose";
 import { APP_CONFIG } from "@/src/config/app.config";
 import { getUserName, getHasPaid } from "@/src/utils/storage";
 import FeedbackButton from "@/src/components/FeedbackButton";
+
+const QUICK_FOCUS_AREAS: { key: FocusArea; label: string }[] = [
+  { key: "wrists", label: "Wrists" },
+  { key: "neck", label: "Neck" },
+  { key: "shoulders", label: "Shoulders" },
+  { key: "back", label: "Back" },
+  { key: "chest", label: "Chest" },
+  { key: "hips", label: "Hips" },
+];
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -80,10 +90,10 @@ export default function HomeScreen() {
                 <View className="flex-row items-center justify-between">
                   <View>
                     <Text className="text-xs uppercase text-[#1B1B1B]">
-                      Start Session
+                      Ready to stretch?
                     </Text>
                     <Text className="text-2xl font-semibold text-[#1B1B1B] mt-1">
-                      Build your flow
+                      Start Session
                     </Text>
                   </View>
                   <View className="h-11 w-11 items-center justify-center rounded-full bg-[#8C3F19]">
@@ -93,6 +103,54 @@ export default function HomeScreen() {
               </View>
             </View>
           </Pressable>
+
+          <Text className="text-sm font-semibold text-[#2B2B2B] mb-3">
+            Quick Focus
+          </Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingRight: 20 }}
+            className="mb-6 -mx-5 px-5"
+          >
+            {QUICK_FOCUS_AREAS.map((area) => (
+              <Pressable
+                key={area.key}
+                onPress={() => {
+                  router.push({
+                    pathname: "/session",
+                    params: {
+                      mode: "just stretch",
+                      posture: "any",
+                      poseDuration: 45,
+                      duration: 5,
+                      focus_area: area.key,
+                    },
+                  });
+                }}
+              >
+                {({ pressed }) => (
+                  <View
+                    className={`mr-2 rounded-full border-2 px-4 py-2.5 ${
+                      pressed
+                        ? "bg-gray-100 border-gray-300"
+                        : "bg-white border-gray-200"
+                    }`}
+                    style={pressed ? { transform: [{ scale: 0.97 }] } : undefined}
+                  >
+                    <Text
+                      className={`text-sm font-semibold ${
+                        pressed ? "text-gray-800" : "text-[#1B1B1B]"
+                      }`}
+                      style={{ fontFamily: "Optima" }}
+                    >
+                      {area.label}
+                    </Text>
+                  </View>
+                )}
+              </Pressable>
+            ))}
+          </ScrollView>
 
           <Text className="text-sm font-semibold text-[#2B2B2B] mb-3">
             Presets
