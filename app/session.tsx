@@ -63,6 +63,7 @@ export default function Session() {
   const [currentPose, setCurrentPose] = useState<Pose | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [resetTrigger, setResetTrigger] = useState(0); // incremented to reset pose timer (e.g. going back)
+  const [remainingSeconds, setRemainingSeconds] = useState(config.duration * 60);
   const glowRef = useRef<PoseTransitionGlowRef>(null);
   const poseCardOpacity = useSharedValue(1);
 
@@ -155,6 +156,15 @@ export default function Session() {
   // Session timer: ends the entire session when the configured duration expires
   useSessionDuration(config.duration, handleEnd, isPaused);
 
+  // Countdown display timer — ticks every second for the UI
+  useEffect(() => {
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      setRemainingSeconds((s) => Math.max(0, s - 1));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isPaused]);
+
   const handleEndPress = () => {
     clearHistory();
     router.replace("/home");
@@ -191,6 +201,11 @@ export default function Session() {
       </View>
 
       {/* Bottom control bar */}
+      <View className="absolute bottom-12 left-0 right-0 items-center z-10">
+        <Text className="text-sm text-[#B0A090]">
+          {Math.floor(remainingSeconds / 60)}:{String(remainingSeconds % 60).padStart(2, "0")}
+        </Text>
+      </View>
       <View className="absolute bottom-20 left-0 right-0 flex-row justify-between px-6 z-10">
         <Pressable
           onPress={handleBack}
