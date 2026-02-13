@@ -49,6 +49,11 @@ export function getNextPose(config: SessionConfig, currentPoseId?: string): Pose
     return getPoseById(seq[nextIndex]) || null;
   }
 
+  // Free tier + focus area: allow only 3 poses then stop
+  if (!getHasPaid() && config.focus_area && history.length >= 3) {
+    return null;
+  }
+
   // If preset has a sequence, use it
   if (config.presetId) {
     const preset = PRESETS.find((p) => p.id === config.presetId);

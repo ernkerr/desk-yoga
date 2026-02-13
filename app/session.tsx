@@ -36,6 +36,7 @@ import { usePoseTimer } from "@/src/utils/poseTimer";
 import { useSessionDuration } from "@/src/utils/sessionDuration";
 import type { Pose } from "@/src/types/pose";
 import type { SessionConfig } from "@/src/types/session";
+import { getHasPaid } from "@/src/utils/storage";
 
 export default function Session() {
   const router = useRouter();
@@ -118,7 +119,12 @@ export default function Session() {
     // Play transition sound if enabled
     playTransitionSound();
 
-    triggerNextPose(config, currentPose?.id, setCurrentPose);
+    const hasNext = triggerNextPose(config, currentPose?.id, setCurrentPose);
+    if (!hasNext && !getHasPaid()) {
+      clearHistory();
+      router.replace("/paywall");
+      return;
+    }
     // Fade in the new pose card
     poseCardOpacity.value = withTiming(1, {
       duration: 350,
@@ -222,11 +228,15 @@ export default function Session() {
         <Pressable
           onPress={() => {
             playTransitionSound();
-            triggerNextPose(
+            const hasNext = triggerNextPose(
               config,
               currentPose?.id,
               setCurrentPose,
             );
+            if (!hasNext && !getHasPaid()) {
+              clearHistory();
+              router.replace("/paywall");
+            }
           }}
           className="w-14 h-14 items-center justify-center"
         >
