@@ -4,6 +4,7 @@ import {
   Text,
   Pressable,
   ScrollView,
+  Alert,
   Animated,
   PanResponder,
   LayoutAnimation,
@@ -16,6 +17,8 @@ import { BackButton } from "@/src/components/BackButton";
 import { Input, InputField } from "@ui/input";
 import { Button, ButtonText } from "@ui/button";
 import { Ionicons } from "@expo/vector-icons";
+import { supabase } from "@/src/utils/supabase";
+import { APP_CONFIG } from "@/src/config/app.config";
 
 const PRIORITY_OTHER_KEY = "__other__";
 const PRIORITY_ROW_HEIGHT = 64;
@@ -155,6 +158,7 @@ export default function FeedbackSurvey() {
     null,
   );
   const [isPriorityDragging, setIsPriorityDragging] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const dragY = useRef(new Animated.Value(0)).current;
   const priorityOrderRef = useRef<string[]>(newFeatureRequestPriority);
@@ -266,6 +270,52 @@ export default function FeedbackSurvey() {
     }
     return map;
   }, [trimmedOther]);
+
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+
+    try {
+      setIsSubmitting(true);
+
+      if (!supabase) {
+        Alert.alert(
+          "Feedback not configured",
+          "Missing Supabase environment variables.",
+        );
+        return;
+      }
+
+      const responses = {
+        free_text: feedbackText.trim(),
+        new_feature_request: newFeatureRequest,
+        new_feature_request_other: trimmedOther,
+        new_feature_request_priority: newFeatureRequestPriority,
+      };
+
+      const context = {
+        platform: Platform.OS,
+      };
+
+      const { error } = await supabase.from("feedback_submissions").insert({
+        app_slug: APP_CONFIG.slug,
+        survey_name: "feedback-survey",
+        survey_version: 1,
+        responses,
+        context,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      router.back();
+    } catch (err) {
+      console.warn("Feedback submit error", err);
+      Alert.alert("Couldn’t submit feedback", "Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <SafeAreaView
@@ -388,7 +438,7 @@ export default function FeedbackSurvey() {
         ) : null}
 
         <View className="mt-6">
-          <Button onPress={() => router.back()} className="w-full">
+          <Button onPress={handleSubmit} className="w-full" disabled={isSubmitting}>
             <ButtonText className="text-white">Submit</ButtonText>
           </Button>
         </View>
