@@ -26,6 +26,12 @@ export default function SessionSettings() {
   const [isCustomPoseDuration, setIsCustomPoseDuration] = useState<boolean>(
     ![15, 30, 45, 60, 120, 300].includes(Number(params.poseDuration) || 45),
   );
+  const [duration, setDuration] = useState<number>(
+    Number(params.duration) || 5,
+  );
+  const [isCustomDuration, setIsCustomDuration] = useState<boolean>(
+    ![2, 5, 10, 30, 45, 60, 90, 120].includes(Number(params.duration) || 5),
+  );
   const [posture, setPosture] = useState<PosturePreference>(
     (params.posture as PosturePreference) || "sitting",
   );
@@ -57,6 +63,7 @@ export default function SessionSettings() {
         camera,
         focus_area: focusArea,
         poseDuration,
+        duration,
       },
     });
   };
@@ -99,6 +106,31 @@ export default function SessionSettings() {
             min={5}
             max={600}
             step={5}
+          />
+        </View>
+
+        {/* Duration */}
+        <View className="mb-6">
+          <Text className="text-lg font-semibold mb-3">Session Duration</Text>
+          <TimeSelector
+            presets={[
+              { value: 2, label: "2 min" },
+              { value: 5, label: "5 min" },
+              { value: 10, label: "10 min" },
+              { value: 30, label: "30 min" },
+              { value: 45, label: "45 min" },
+              { value: 60, label: "1 hour" },
+              { value: 90, label: "1.5 hours" },
+              { value: 120, label: "2 hours" },
+            ]}
+            value={duration}
+            onChange={setDuration}
+            isCustom={isCustomDuration}
+            onCustomToggle={setIsCustomDuration}
+            unit="minutes"
+            min={1}
+            max={120}
+            step={1}
           />
         </View>
 
